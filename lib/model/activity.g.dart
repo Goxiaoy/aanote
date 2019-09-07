@@ -9,12 +9,25 @@ part of 'activity.dart';
 Activity _$ActivityFromJson(Map<String, dynamic> json) {
   return Activity(
     name: json['name'] as String,
-  )..status = _$enumDecodeNullable(_$ActivityStatusEnumMap, json['status']);
+    startTime: json['startTime'] == null
+        ? null
+        : DateTime.parse(json['startTime'] as String),
+  )
+    ..status = _$enumDecodeNullable(_$ActivityStatusEnumMap, json['status'])
+    ..isFavorite = json['isFavorite'] as bool
+    ..favoriteTime = json['favoriteTime'] == null
+        ? null
+        : DateTime.parse(json['favoriteTime'] as String)
+    ..desc = json['desc'] as String;
 }
 
 Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
       'status': _$ActivityStatusEnumMap[instance.status],
       'name': instance.name,
+      'isFavorite': instance.isFavorite,
+      'favoriteTime': instance.favoriteTime?.toIso8601String(),
+      'startTime': instance.startTime?.toIso8601String(),
+      'desc': instance.desc,
     };
 
 T _$enumDecode<T>(

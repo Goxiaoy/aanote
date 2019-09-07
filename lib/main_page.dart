@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:aanote/focusing_page.dart';
 import 'package:flutter/material.dart';
 
 
@@ -12,7 +12,7 @@ class MainPage extends StatelessWidget {
 class MainPageWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new MainPageState();
+    return MainPageState();
   }
 }
 
@@ -26,9 +26,9 @@ class MainPageState extends State<MainPageWidget>{
   void initState() {
     super.initState();
     _barItems=[
-      _AppBarItem("Focusing",unselectedWidget:const Icon(Icons.adjust)),
-      _AppBarItem("History",unselectedWidget:const Icon(Icons.history)),
-      _AppBarItem("Tools",unselectedWidget:const Icon(Icons.build))
+      _AppBarItem("Focusing",FocusingPage(),unselectedWidget:const Icon(Icons.adjust)),
+      _AppBarItem("History",FocusingPage(),unselectedWidget:const Icon(Icons.history)),
+      _AppBarItem("Tools",FocusingPage(),unselectedWidget:const Icon(Icons.build))
     ];
   }
 
@@ -49,7 +49,6 @@ class MainPageState extends State<MainPageWidget>{
   }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
         body:_barItems[_currentIndex].page,
         bottomNavigationBar: BottomNavigationBar(
@@ -81,10 +80,11 @@ class _AppBarItem {
   Widget unselectedWidget;
   Widget selectedWidget;
 
-  _AppBarItem(this.text,{this.unselectedImage,this.selectedImage,this.selectedWidget,this.unselectedWidget}){
+  _AppBarItem(this.text,this.page,{this.unselectedImage,this.selectedImage,this.selectedWidget,this.unselectedWidget}){
     if(unselectedImage!=null&&unselectedWidget==null){
       unselectedWidget=Image.asset(unselectedImage);
     }
+    //selected widget usually is the same with unselected
     if(selectedWidget==null){
       selectedWidget=unselectedWidget;
     }

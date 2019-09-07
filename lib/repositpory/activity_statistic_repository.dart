@@ -1,0 +1,4 @@
+///activity statistic
+class ActivityStatisticsRepository{
+
+}
