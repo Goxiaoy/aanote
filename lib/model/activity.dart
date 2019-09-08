@@ -5,8 +5,8 @@ import 'package:json_annotation/json_annotation.dart';
 part 'activity.g.dart';
 
 enum ActivityStatus{
-  //open status.
-  Opening,
+  //active status.
+  Active,
   //archived, cannot add new item
   Archived,
 }
@@ -14,8 +14,8 @@ enum ActivityStatus{
 @JsonSerializable()
 
 class Activity{
-  Activity({@required this.name,@required this.startTime}):status=ActivityStatus.Opening;
-
+  Activity({@required this.id,@required this.name,@required this.startTime}):status=ActivityStatus.Active;
+  String id;
   ActivityStatus status;
 
   String name;

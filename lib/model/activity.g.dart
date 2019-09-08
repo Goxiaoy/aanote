@@ -8,6 +8,7 @@ part of 'activity.dart';
 
 Activity _$ActivityFromJson(Map<String, dynamic> json) {
   return Activity(
+    id: json['id'] as String,
     name: json['name'] as String,
     startTime: json['startTime'] == null
         ? null
@@ -22,6 +23,7 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
+      'id': instance.id,
       'status': _$ActivityStatusEnumMap[instance.status],
       'name': instance.name,
       'isFavorite': instance.isFavorite,
@@ -63,6 +65,6 @@ T _$enumDecodeNullable<T>(
 }
 
 const _$ActivityStatusEnumMap = {
-  ActivityStatus.Opening: 'Opening',
+  ActivityStatus.Active: 'Active',
   ActivityStatus.Archived: 'Archived',
 };

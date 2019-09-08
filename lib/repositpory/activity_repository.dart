@@ -3,15 +3,10 @@ import 'package:aanote/model/activity.dart';
 class ActivityRepository {
   ///get active activities
   Future<List<Activity>> getActive() async {
-    var ret = new List<Activity>();
-
-    var ac = new Activity(
-        name: "Test1", startTime: DateTime.now().add(Duration(days: -7)));
-    ret.add(ac);
-    ac = new Activity(
-        name: "Test2", startTime: DateTime.now().add(Duration(days: -3)));
-    ac.setFavorite();
-    ret.add(ac);
+    var ret=<Activity>[
+      Activity(id:"1",name: "Test1", startTime: DateTime.now().add(Duration(days: -7))),
+      Activity(
+          id:"2",name: "Test2", startTime: DateTime.now().add(Duration(days: -3)))..setFavorite()];
     //ret.sort((a, b) => a.favoriteTime.compareTo(b.favoriteTime));
     return ret;
   }

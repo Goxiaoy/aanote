@@ -1,3 +1,4 @@
+import 'package:aanote/component/floating_button.dart';
 import 'package:aanote/focusing_page.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +22,8 @@ class MainPageState extends State<MainPageWidget>{
   int _currentIndex=0;
 
   List<_AppBarItem> _barItems;
+
+  _AppBarItem get _currentBarItem  => _barItems[_currentIndex];
 
   @override
   void initState() {
@@ -47,6 +50,24 @@ class MainPageState extends State<MainPageWidget>{
       }
       return ret;
   }
+  ///build floating button
+  Widget _buildFloatingButton(){
+      if(_currentBarItem.text=="Focusing"){
+        var buttonItems=[
+          FloatingButtonItem(
+              icon: Icon(Icons.note), desc: "Add note", onPressed: null),
+          FloatingButtonItem(
+              icon: Icon(Icons.event), desc: "Add activity", onPressed: null),
+          FloatingButtonItem(
+              icon: Icon(Icons.people), desc: "Add people", onPressed: null),
+        ];
+        //var buttonItems=null;
+        return FloatingButton(floatingButtonItems: buttonItems,icon: Icons.add,);
+      }else{
+        return null;
+      }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +79,7 @@ class MainPageState extends State<MainPageWidget>{
           iconSize: 24.0,
           onTap: setIndex,
         ),
+      floatingActionButton: _buildFloatingButton(),
     );
   }
 
