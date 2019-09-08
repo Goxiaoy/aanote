@@ -14,7 +14,7 @@ enum ActivityStatus{
 @JsonSerializable()
 
 class Activity{
-  Activity({@required this.id,@required this.name,@required this.startTime}):status=ActivityStatus.Active;
+  Activity({@required this.id,@required this.name,@required this.startTime}):status=ActivityStatus.Active,isFavorite=false;
   String id;
   ActivityStatus status;
 

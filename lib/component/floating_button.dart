@@ -88,7 +88,8 @@ class _FloatingButtonState extends State<FloatingButton>
     }else{
 
     }
-    widget.onPressed();
+    if(widget.onPressed!=null)
+      widget.onPressed();
  }
 
   List<Widget> _buildFloatingButtonItem() {

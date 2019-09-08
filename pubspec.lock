@@ -186,6 +186,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.24"
+  function_types:
+    dependency: transitive
+    description:
+      name: function_types
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.2"
   glob:
     dependency: transitive
     description:
@@ -347,6 +354,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.5"
+  queries:
+    dependency: "direct main"
+    description:
+      name: queries
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.12"
   quiver:
     dependency: transitive
     description:
