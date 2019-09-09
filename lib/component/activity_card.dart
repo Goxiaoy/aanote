@@ -1,5 +1,8 @@
+import 'package:aanote/component/statistics/category_pie_chart.dart';
 import 'package:aanote/component/statistics/per_day_chart.dart';
+import 'package:aanote/component/statistics/per_person_chart.dart';
 import 'package:aanote/model/activity.dart';
+import 'package:aanote/model/category.dart';
 import 'package:aanote/model/statistics/activity_per_day_statistics.dart';
 import 'package:aanote/model/statistics/activity_total_statistics.dart';
 import 'package:aanote/repositpory/activity_statistic_repository.dart';
@@ -80,7 +83,8 @@ class _ActivityCardState extends State<ActivityCard>
               return new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Text("Total cost:" + (snapshot.data?.totalCost?.toString() ?? "")),
+                    Text("Total cost:" +
+                        (snapshot.data?.totalCost?.toString() ?? "")),
                     Container(
                       height: 20,
                       child: VerticalDivider(
@@ -88,7 +92,8 @@ class _ActivityCardState extends State<ActivityCard>
                         color: Colors.black,
                       ),
                     ),
-                    Text("Total cost:" +( snapshot.data?.totalCost?.toString() ?? ""))
+                    Text("Total cost:" +
+                        (snapshot.data?.totalCost?.toString() ?? ""))
                   ]);
             }));
   }
@@ -101,43 +106,58 @@ class _ActivityCardState extends State<ActivityCard>
           future: ActivityStatisticsRepository()
               .getPerDayStatistics(activityId: activity.id),
           builder: (c, snapshot) {
-            return PerDayChart(snapshot.data,animate: true,);
+            return PerDayChart(
+              snapshot.data,
+              animate: true,
+            );
           },
         ));
 
+    var categoryPie = CategoryPieChart.withSampleData();
+    var perPersonChart= PerPersonChart.withSampleData();
     return Column(
       children: <Widget>[
         perDay,
-        Divider()
+        Divider(height: 30,),
+        Container(
+          padding: const EdgeInsets.all(10.0),
+          height: 300,
+          child: categoryPie,
+        ),
+        Divider(height: 30,),
+        Container(
+          padding: const EdgeInsets.all(10.0),
+          height: 300,
+          child: perPersonChart,
+        ),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return
-        Container(
-            color: Colors.grey,
-            width: double.infinity,
-            child: ListView(
-              children: <Widget>[
-                Center(
-                  child: Card(
-                    child: _buildActivityTotal(),
-                  ),
-                ),
-                Center(
-                  child: Card(
-                    child: _buildTotalStatistics(),
-                  ),
-                ),
-                Center(
-                  //other statistics card
-                  child: Card(
-                    child: _buildOtherStatistics(),
-                  ),
-                ),
-              ],
-            ));
+    return Container(
+        color: Colors.grey,
+        width: double.infinity,
+        child: ListView(
+          children: <Widget>[
+            Center(
+              child: Card(
+                child: _buildActivityTotal(),
+              ),
+            ),
+            Center(
+              child: Card(
+                child: _buildTotalStatistics(),
+              ),
+            ),
+            Center(
+              //other statistics card
+              child: Card(
+                child: _buildOtherStatistics(),
+              ),
+            ),
+          ],
+        ));
   }
 }
