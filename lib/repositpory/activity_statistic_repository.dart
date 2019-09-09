@@ -3,6 +3,7 @@ import 'package:aanote/model/statistics/activity_per_day_statistics.dart';
 import 'package:aanote/model/statistics/activity_total_statistics.dart';
 import 'package:aanote/model/user.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:queries/queries.dart';
 
 ///activity statistic
 class ActivityStatisticsRepository{
@@ -14,16 +15,13 @@ class ActivityStatisticsRepository{
         ..activityId=activityId..type=type..totalCost=100.0..averageDayCost=10.0;
   }
 
-  Future<List<ActivityPerDayStatistics>> getPerDayStatistics({@required String activityId}) async{
+  Future<List<ActivityPerDayStatistics>> getPerDayStatistics({@required String activityId,DateTime startDate,DateTime endDate}) async{
       var activity=Activity(id:"1",name: "Test Ac1",startTime: DateTime.now().add(Duration(days: -200)));
       var users=[
         User("TestUser1",id: "1"),
         User("TestUser2",id: "2")
       ];
-      var dates= [
-      DateTime.now().add(Duration(days: -2)),
-        DateTime.now().add(Duration(days: -1)),
-      ];
+      var dates=Enumerable.range(1, 100).select((p)=> DateTime.now().add(Duration(days: -p))).toList();
       var ret=<ActivityPerDayStatistics>[];
       for (var user in users) {
         for(var date in dates){
@@ -32,4 +30,5 @@ class ActivityStatisticsRepository{
       }
       return ret;
   }
+
 }

@@ -3,10 +3,10 @@ import 'package:aanote/model/user.dart';
 
 class ActivityPerDayStatistics{
 
-  Activity activity;
-  DateTime date;
-  double cost;
-  User user;
+  final Activity activity;
+  final DateTime date;
+  final double cost;
+  final User user;
 
   ActivityPerDayStatistics(this.activity, this.date, this.cost, this.user);
 

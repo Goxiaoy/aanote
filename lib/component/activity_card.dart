@@ -1,4 +1,4 @@
-import 'package:aanote/component/activity_statistics_per_day_chart.dart';
+import 'package:aanote/component/statistics/per_day_chart.dart';
 import 'package:aanote/model/activity.dart';
 import 'package:aanote/model/statistics/activity_per_day_statistics.dart';
 import 'package:aanote/model/statistics/activity_total_statistics.dart';
@@ -80,8 +80,7 @@ class _ActivityCardState extends State<ActivityCard>
               return new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Text("Total cost:" + snapshot.data?.totalCost?.toString() ??
-                        ""),
+                    Text("Total cost:" + (snapshot.data?.totalCost?.toString() ?? "")),
                     Container(
                       height: 20,
                       child: VerticalDivider(
@@ -89,8 +88,7 @@ class _ActivityCardState extends State<ActivityCard>
                         color: Colors.black,
                       ),
                     ),
-                    Text("Total cost:" + snapshot.data?.totalCost?.toString() ??
-                        "")
+                    Text("Total cost:" +( snapshot.data?.totalCost?.toString() ?? ""))
                   ]);
             }));
   }
@@ -103,12 +101,16 @@ class _ActivityCardState extends State<ActivityCard>
           future: ActivityStatisticsRepository()
               .getPerDayStatistics(activityId: activity.id),
           builder: (c, snapshot) {
-            return ActivityStatisticsPerDayChart(snapshot.data,animate: true,);
+            return PerDayChart(snapshot.data,animate: true,);
           },
         ));
-    
 
-    return perDay;
+    return Column(
+      children: <Widget>[
+        perDay,
+        Divider()
+      ],
+    );
   }
 
   @override
