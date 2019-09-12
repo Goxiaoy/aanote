@@ -25,6 +25,7 @@ class Activity{
   DateTime favoriteTime;
 
   DateTime startTime;
+  DateTime endTime;
 
   String desc;
 

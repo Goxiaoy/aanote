@@ -25,7 +25,14 @@ class _ActivityDetailPageState extends State<ActivityDetailPage>{
   ///activity notes
   List<ActivityNote> activityNotes;
 
-  
+  ///current page Index
+  int _currentPageIndex=0;
+
+  String _searchFilter;
+
+  ///per page count
+  static const int _perPageCount=20;
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

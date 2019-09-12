@@ -39,37 +39,54 @@ class _FocusingPageState extends State<FocusingPage> {
         builder: _buildFuture, future: ActivityRepository().getActive().then((p)=>activeActivities=p));
   }
 
+
   Widget _buildFuture(BuildContext context, AsyncSnapshot<List<Activity>> snapshot) {
     if (snapshot.data!=null&&snapshot.data.length>0) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: double.infinity,
-              height: 20.0,
-            ),
-            Expanded(
-              child: CardFlipper(
-                  cards: _buildActivitiesCards(),
-                  onScroll: (double sp) {
-                    setState(() {
-                      this.scrollPercent = sp;
-                    });
-                  }),
-            ),
-            BottomBar(
-                cardCount: activeActivities.length, scrollPercent: scrollPercent)
-          ]);
+      return _buildActivitiesCards().first;
     } else {
       //todo tips to let user add activity
       return  Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-        Container(
-          width: double.infinity,
-          height: 20.0,
-        )
-      ]);
+            Container(
+              width: double.infinity,
+              height: 20.0,
+            )
+          ]);
     }
   }
+
+//  Widget _buildFuture(BuildContext context, AsyncSnapshot<List<Activity>> snapshot) {
+//    if (snapshot.data!=null&&snapshot.data.length>0) {
+//      return Column(
+//          mainAxisAlignment: MainAxisAlignment.center,
+//          children: <Widget>[
+//            Container(
+//              width: double.infinity,
+//              height: 20.0,
+//            ),
+//            Expanded(
+//              child: CardFlipper(
+//                  cards: _buildActivitiesCards(),
+//                  onScroll: (double sp) {
+//                    setState(() {
+//                      this.scrollPercent = sp;
+//                    });
+//                  }),
+//            ),
+//            BottomBar(
+//                cardCount: activeActivities.length, scrollPercent: scrollPercent)
+//          ]);
+//    } else {
+//      //todo tips to let user add activity
+//      return  Column(
+//          mainAxisAlignment: MainAxisAlignment.center,
+//          children: <Widget>[
+//        Container(
+//          width: double.infinity,
+//          height: 20.0,
+//        )
+//      ]);
+//    }
+//  }
 }

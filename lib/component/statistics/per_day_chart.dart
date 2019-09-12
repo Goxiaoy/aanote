@@ -17,6 +17,9 @@ class PerDayChart extends StatelessWidget {
   List<charts.Series> _buildSeriesData(List<ActivityPerDayStatistics> data) {
     var collection = Collection(data);
     var sorted=collection.orderByDescending((_) => _.date).toList();
+    if(sorted.length<=0){
+      return <charts.Series<ActivityPerDayStatistics, String>>[];
+    }
     initialDate = formatTime(sorted.last.date.add(Duration(days: -7)));
     var grouped = collection.groupBy((p) => p.user.name);
     return grouped
