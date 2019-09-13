@@ -16,9 +16,14 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) {
   )
     ..status = _$enumDecodeNullable(_$ActivityStatusEnumMap, json['status'])
     ..isFavorite = json['isFavorite'] as bool
+    ..isPinned = json['isPinned'] as bool
     ..favoriteTime = json['favoriteTime'] == null
         ? null
         : DateTime.parse(json['favoriteTime'] as String)
+    ..endTime = json['endTime'] == null
+        ? null
+        : DateTime.parse(json['endTime'] as String)
+    ..color = json['color'] as String
     ..desc = json['desc'] as String;
 }
 
@@ -27,8 +32,11 @@ Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
       'status': _$ActivityStatusEnumMap[instance.status],
       'name': instance.name,
       'isFavorite': instance.isFavorite,
+      'isPinned': instance.isPinned,
       'favoriteTime': instance.favoriteTime?.toIso8601String(),
       'startTime': instance.startTime?.toIso8601String(),
+      'endTime': instance.endTime?.toIso8601String(),
+      'color': instance.color,
       'desc': instance.desc,
     };
 

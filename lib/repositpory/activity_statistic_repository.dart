@@ -21,7 +21,7 @@ class ActivityStatisticsRepository{
         User("TestUser1",id: "1"),
         User("TestUser2",id: "2")
       ];
-      var dates=Enumerable.range(1, 100).select((p)=> DateTime.now().add(Duration(days: -p))).toList();
+      var dates=Enumerable.range(1, 20).select((p)=> DateTime.now().add(Duration(days: -p))).toList();
       var ret=<ActivityPerDayStatistics>[];
       for (var user in users) {
         for(var date in dates){

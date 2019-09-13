@@ -72,13 +72,13 @@ class MainPageState extends State<MainPageWidget>{
   Widget build(BuildContext context) {
     return Scaffold(
         body:_barItems[_currentIndex].page,
-        bottomNavigationBar: BottomNavigationBar(
-          items: _buildItems(),
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _currentIndex,
-          iconSize: 24.0,
-          onTap: setIndex,
-        ),
+//        bottomNavigationBar: BottomNavigationBar(
+//          items: _buildItems(),
+//          type: BottomNavigationBarType.fixed,
+//          currentIndex: _currentIndex,
+//          iconSize: 24.0,
+//          onTap: setIndex,
+//        ),
       floatingActionButton: _buildFloatingButton(),
     );
   }

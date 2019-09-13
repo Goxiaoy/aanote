@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -26,6 +26,8 @@ dependencies:
   json_annotation: ^3.0.0
   charts_flutter: ^0.8.0
   queries: ^0.1.12
+  flutter_masked_text: ^0.8.0
+  loadany: ^0.1.2
 
 dev_dependencies:
   flutter_test:

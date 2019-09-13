@@ -1,13 +1,6 @@
-import 'dart:math';
-
-import 'package:aanote/component/statistics/category_pie_chart.dart';
-import 'package:aanote/component/statistics/per_day_chart.dart';
-import 'package:aanote/component/statistics/per_person_chart.dart';
+import 'package:aanote/component/activity_note_list.dart';
+import 'package:aanote/component/activity_statistics_view.dart';
 import 'package:aanote/model/activity.dart';
-import 'package:aanote/model/category.dart';
-import 'package:aanote/model/statistics/activity_per_day_statistics.dart';
-import 'package:aanote/model/statistics/activity_total_statistics.dart';
-import 'package:aanote/repositpory/activity_statistic_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
@@ -20,7 +13,6 @@ class ActivityCard extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _ActivityCardState();
   }
 }
@@ -29,102 +21,49 @@ class _ActivityCardState extends State<ActivityCard>
     with TickerProviderStateMixin {
   Activity get activity => widget.activity;
 
-  ActivityTotalStatisticsType _totalStatisticsType =
-      ActivityTotalStatisticsType.Team;
-
-  ActivityTotalStatistics _totalStatistics;
-
-  TabController tabController;
+  List<Tab>  _tabs;
 
   @override
   initState() {
     super.initState();
-    this.tabController = TabController(length: 2, vsync: this);
-  }
-
-  Widget _buildTotalStatistics() {
-    return Container(
-        padding: const EdgeInsets.all(10),
-        child: FutureBuilder<ActivityTotalStatistics>(
-            future: ActivityStatisticsRepository()
-                .getTotal(activityId: activity.id, type: _totalStatisticsType),
-            builder: (c, snapshot) {
-              return new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text("Total cost:" +
-                        (snapshot.data?.totalCost?.toString() ?? "")),
-                    Container(
-                      height: 20,
-                      child: VerticalDivider(
-                        width: 20,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text("Total cost:" +
-                        (snapshot.data?.totalCost?.toString() ?? ""))
-                  ]);
-            }));
-  }
-
-  Widget _buildPerDay() {
-    return Container(
-        padding: const EdgeInsets.all(10.0),
-        height: 300,
-        child: FutureBuilder<List<ActivityPerDayStatistics>>(
-          future: ActivityStatisticsRepository()
-              .getPerDayStatistics(activityId: activity.id),
-          builder: (c, snapshot) {
-            return PerDayChart(
-              snapshot.data,
-              animate: true,
-            );
-          },
-        ));
-  }
-
-  Widget _buildCategoryPie() {
-    return Container(
-        padding: const EdgeInsets.all(10.0),
-        height: 300,
-        child: CategoryPieChart.withSampleData());
+    _tabs=<Tab>[
+      Tab(child:ListTile(
+        leading: Icon(Icons.pie_chart),
+        title: Text("Info"),
+      ) ),
+      Tab(child:ListTile(
+        leading: Icon(Icons.list),
+        title: Text("Detail"),
+      ))
+    ];
   }
 
   Widget _buildActivityDes() {
-    return Container(
-        padding: const EdgeInsets.all(10.0),
+    return Card(
         child: new Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 5, top: 10),
-                child: new Text(
-                  activity.desc ?? "",
+              if (activity.desc != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5, top: 5),
+                  child: new Text(
+                    activity.desc,
+                  ),
                 ),
-              ),
               Row(
                 children: <Widget>[
                   new Text(
                     "StartTime: " +
                         new DateFormat('yyyy-MM-dd').format(activity.startTime),
                   ),
-                  new Text(
-                    activity.endTime == null
-                        ? ""
-                        : ("EndTime: " +
-                            new DateFormat('yyyy-MM-dd')
-                                .format(activity.endTime)),
-                  )
+                  if (activity.endTime != null)
+                    new Text(
+                      "EndTime: " +
+                          new DateFormat('yyyy-MM-dd').format(activity.endTime),
+                    )
                 ],
               )
             ]));
-  }
-
-  Widget _buildPerPersonChart() {
-    return Container(
-        padding: const EdgeInsets.all(10.0),
-        height: 300,
-        child: PerPersonChart.withSampleData());
   }
 
   List<PopupMenuEntry> _buildPopupMenu() {
@@ -154,85 +93,77 @@ class _ActivityCardState extends State<ActivityCard>
     return ret;
   }
 
+  Widget _buildTabBar(){
+    return SliverPersistentHeader(
+      pinned: false,
+      floating: false,
+      delegate: _SliverAppBarDelegate(
+        minHeight: 50.0,
+        maxHeight: 50.0,
+        child: Container(
+            child: TabBar(
+              tabs: _tabs,
+              indicatorColor: Colors.black,
+            )),
+      ),
+    );
+  }
+
+  Widget _buildAppBar(){
+    return SliverAppBar(
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back_ios,
+        ),
+        onPressed: null,
+      ),
+      floating: false,
+      pinned: true,
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.share,
+          ),
+          onPressed: null,
+        ),
+        IconButton(
+            icon: Icon(
+              activity.isFavorite ? Icons.star : Icons.star_border,
+              color: Colors.red[500],
+            ),
+            onPressed: null),
+        PopupMenuButton(
+          itemBuilder: (BuildContext context) => _buildPopupMenu(),
+        )
+      ],
+      title: Text(activity.name),
+      backgroundColor: Colors.grey,
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.white10,
-        width: double.infinity,
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                ),
-                onPressed: null,
-              ),
-              floating: false,
-              pinned: true,
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    Icons.share,
-                  ),
-                  onPressed: null,
-                ),
-                IconButton(
-                    icon: Icon(
-                      activity.isFavorite ? Icons.star : Icons.star_border,
-                      color: Colors.red[500],
-                    ),
-                    onPressed: null),
-                PopupMenuButton(
-                  itemBuilder: (BuildContext context) => _buildPopupMenu(),
-                )
-              ],
-              title: Text(activity.name),
-              backgroundColor: Colors.grey,
-              // floating: floating,
-              // snap: snap,
-              // pinned: pinned,
-            ),
-            SliverPersistentHeader(
-              pinned: false,
-              floating: false,
-              delegate: _SliverAppBarDelegate(
-                minHeight: 50.0,
-                maxHeight: 50.0,
-                child: TabBar(tabs: <Widget>[
-                  ListTile(leading: Icon(Icons.pie_chart),title: Text("Statistics"),),
-                  ListTile(leading: Icon(Icons.list),title: Text("Detail"),)
-                ],controller: this.tabController,indicatorColor: Colors.black,),
-              ),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate([
-                _buildActivityDes(),
-                Card(
-                  child: _buildTotalStatistics(),
-                ),
-                Card(child: _buildPerDay()),
-                Card(child: _buildCategoryPie()),
-                Card(
-                  child: _buildPerPersonChart(),
-                )
-              ]),
-            )
-
-//            SliverToBoxAdapter(child:Center(child: _buildActivityTotal())),
-//            SliverToBoxAdapter(child: Center(
-//              child: Card(
-//                child: _buildTotalStatistics(),
-//              ),
-//            ),),
-//            Center(
-//              //other statistics card
-//              child: Card(
-//                child: _buildOtherStatistics(),
-//              ),
-//            ),
+    // TODO: implement build
+    return Scaffold(
+      body: DefaultTabController(
+        length: 2,
+        child: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) =><Widget>[
+            _buildAppBar(),
+            _buildTabBar()
           ],
-        ));
+          body: new TabBarView(
+            children: <Widget>[
+              ListView(children: <Widget>[
+                _buildActivityDes(),
+                ActivityStatisticsView(activity: activity,)],) ,
+              ActivityNoteList(activity: activity,)
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

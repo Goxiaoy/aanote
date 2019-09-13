@@ -14,18 +14,21 @@ enum ActivityStatus{
 @JsonSerializable()
 
 class Activity{
-  Activity({@required this.id,@required this.name,@required this.startTime}):status=ActivityStatus.Active,isFavorite=false;
+  Activity({@required this.id,@required this.name,@required this.startTime}):status=ActivityStatus.Active,isFavorite=false,isPinned=false;
   String id;
   ActivityStatus status;
 
   String name;
   ///is favorite for user
   bool isFavorite;
+  bool isPinned;
   ///latest set favorite time
   DateTime favoriteTime;
 
   DateTime startTime;
   DateTime endTime;
+
+  String color;
 
   String desc;
 
