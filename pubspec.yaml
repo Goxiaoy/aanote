@@ -29,7 +29,7 @@ dependencies:
   charts_flutter: ^0.8.0
   queries: ^0.1.12
   flutter_masked_text: ^0.8.0
-  loadany: ^0.1.2
+  pull_to_refresh: ^1.5.6
 
 dev_dependencies:
   flutter_test:

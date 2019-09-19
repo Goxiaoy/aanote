@@ -289,13 +289,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.3.24"
-  loadany:
-    dependency: "direct main"
-    description:
-      name: loadany
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.1.2"
   logging:
     dependency: transitive
     description:
@@ -373,6 +366,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.5"
+  pull_to_refresh:
+    dependency: "direct main"
+    description:
+      name: pull_to_refresh
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.5.6"
   queries:
     dependency: "direct main"
     description:
@@ -506,3 +506,4 @@ packages:
     version: "2.1.16"
 sdks:
   dart: ">=2.3.0 <3.0.0"
+  flutter: ">=0.1.4 <2.0.0"

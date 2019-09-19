@@ -2,9 +2,10 @@ import 'package:aanote/component/activity_note_card.dart';
 import 'package:aanote/model/activity.dart';
 import 'package:aanote/model/activity_note.dart';
 import 'package:aanote/repositpory/activity_repository.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:loadany/loadany.dart';
 import 'package:queries/queries.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ActivityNoteList extends StatefulWidget{
 
@@ -31,10 +32,9 @@ class _ActivityNoteListSate extends State<ActivityNoteList>{
 
   bool isLoading=false;
 
-  LoadStatus status = LoadStatus.normal;
-
   _ActivityNoteListSate(this.activityId);
 
+  RefreshController _refreshController = RefreshController(initialRefresh: true);
 
   @override
   void initState() {
@@ -42,20 +42,26 @@ class _ActivityNoteListSate extends State<ActivityNoteList>{
     super.initState();
   }
 
-  /// Load More Get Data
-  Future<void> getLoadMore() async {
-    setState(() {
-      status = LoadStatus.loading;
-    });
+  void _onRefresh() async{
+    // monitor network fetch
     var newData=await ActivityRepository().getNotesGroupedByDate(activityId: activityId,pageIndex: currentIndex);
-    if(newData.totalCount<=currentIndex*pageCount){
-      status = LoadStatus.completed;
-    }else{
-      groupedNotes.addAll(newData.items);
-      status=LoadStatus.normal;
-    }
-    setState(() {});
+    groupedNotes.addAll(newData.items);
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
   }
+
+  void _onLoading() async{
+    // monitor network fetch
+    var newData=await ActivityRepository().getNotesGroupedByDate(activityId: activityId,pageIndex: currentIndex);
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    groupedNotes.addAll(newData.items);
+    if(mounted)
+      setState(() {
+
+      });
+    _refreshController.loadComplete();
+  }
+
 
   Widget _buildItem(BuildContext context, IGrouping<DateTime, ActivityNote> groupedNote) {
     var ret=<Widget>[
@@ -73,25 +79,43 @@ class _ActivityNoteListSate extends State<ActivityNoteList>{
 
   @override
   Widget build(BuildContext context) {
-    return LoadAny(
-      onLoadMore: getLoadMore,
-      status: status,
-      footerHeight: 40,
-      endLoadMore: true,
-      bottomTriggerDistance: 200,
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                return _buildItem(context, groupedNotes[index]);
-              },
-              childCount: groupedNotes.length,
-            ),
-          )
-        ],
+    return SmartRefresher(
+      enablePullDown: true,
+      enablePullUp: true,
+      header: WaterDropHeader(),
+      footer: CustomFooter(
+        builder: (BuildContext context,LoadStatus mode){
+          Widget body ;
+          if(mode==LoadStatus.idle){
+            body =  Text("pull up load");
+          }
+          else if(mode==LoadStatus.loading){
+            body =  CupertinoActivityIndicator();
+          }
+          else if(mode == LoadStatus.failed){
+            body = Text("Load Failed!Click retry!");
+          }
+          else if(mode == LoadStatus.canLoading){
+            body = Text("release to load more");
+          }
+          else{
+            body = Text("No more Data");
+          }
+          return Container(
+            height: 55.0,
+            child: Center(child:body),
+          );
+        },
+      ),
+      controller: _refreshController,
+      onRefresh: _onRefresh,
+      onLoading: _onLoading,
+      child: ListView.builder(
+        itemBuilder: (c, i) => _buildItem(context, groupedNotes[i]),
+        itemCount: groupedNotes.length,
       ),
     );
   }
+
 }
 
