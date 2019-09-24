@@ -5,7 +5,7 @@ import 'package:queries/collections.dart';
 import 'package:intl/intl.dart';
 
 class PerDayChart extends StatelessWidget {
-  List<charts.Series> seriesList;
+  List<charts.Series<ActivityPerDayStatistics, String>> seriesList;
   final List<ActivityPerDayStatistics> activityPerDayStatistics;
   final bool animate;
   String initialDate;
@@ -14,7 +14,7 @@ class PerDayChart extends StatelessWidget {
     this.seriesList = _buildSeriesData(activityPerDayStatistics);
   }
 
-  List<charts.Series> _buildSeriesData(List<ActivityPerDayStatistics> data) {
+  List<charts.Series<ActivityPerDayStatistics, String>> _buildSeriesData(List<ActivityPerDayStatistics> data) {
     var collection = Collection(data);
     var sorted=collection.orderByDescending((_) => _.date).toList();
     if(sorted.length<=0){

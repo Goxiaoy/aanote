@@ -14,7 +14,7 @@ class ValueChangeAnimatedText extends StatefulWidget {
 
 class _ValueChangeAnimatedTextState extends State<ValueChangeAnimatedText>
     with SingleTickerProviderStateMixin {
-  Animation animation;
+  Animation<double> animation;
   AnimationController animationController;
   Tween<double> _tween;
 

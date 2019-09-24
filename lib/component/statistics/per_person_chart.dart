@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class PerPersonChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<OrdinalSales, String>> seriesList;
   final bool animate;
 
   PerPersonChart(this.seriesList, {this.animate});
