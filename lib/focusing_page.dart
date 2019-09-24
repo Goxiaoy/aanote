@@ -1,6 +1,5 @@
 import 'package:aanote/component/activity_card.dart';
 import 'package:aanote/component/bottom_bar.dart';
-import 'package:aanote/component/card_flipper.dart';
 import 'package:aanote/repositpory/activity_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:aanote/model/activity.dart';
