@@ -2,8 +2,8 @@ import 'package:aanote/component/floating_button.dart';
 import 'package:aanote/focusing_page.dart';
 import 'package:flutter/material.dart';
 
-
 class MainPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(

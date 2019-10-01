@@ -22,6 +22,7 @@ class S implements WidgetsLocalizations {
   TextDirection get textDirection => TextDirection.ltr;
 
   String get app_title => "AA Note";
+  String get tell_name => "Hi, please tell me your name...";
 }
 
 class $en extends S {
@@ -34,6 +35,10 @@ class $zh extends S {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  @override
+  String get app_title => "AA 笔记";
+  @override
+  String get tell_name => "你好, 请告诉我你的名字...";
 }
 
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
