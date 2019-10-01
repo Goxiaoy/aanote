@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 
 part 'user.g.dart';
@@ -8,7 +9,7 @@ part 'user.g.dart';
 @JsonSerializable()
 
 class User{
-  User(this.name,{@required this.id,this.isMe=false,this.phone, this.email});
+  User(this.name,{String id,this.isMe=false,this.phone, this.email}):id=id??Uuid().v4();
 
   String id;
   bool isMe;

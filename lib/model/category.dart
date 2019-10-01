@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 
 part 'category.g.dart';
@@ -8,7 +9,7 @@ part 'category.g.dart';
 
 class Category{
 
-  Category(this.id,this.name);
+  Category(String id,this.name):id=id??Uuid().v4();
 
   String id;
   ///display name

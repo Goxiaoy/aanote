@@ -3,6 +3,7 @@ import 'package:aanote/model/activity_participation.dart';
 import 'package:aanote/model/category.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 
 part 'activity_note.g.dart';
@@ -11,7 +12,7 @@ part 'activity_note.g.dart';
 @JsonSerializable()
 
 class ActivityNote{
-  ActivityNote({this.id,this.name,this.categoryId,@required this.time,@required this.activityId});
+  ActivityNote({String id,this.name,this.categoryId,@required this.time,@required this.activityId}):id=id??Uuid().v4();
 
   String id;
   ///category name

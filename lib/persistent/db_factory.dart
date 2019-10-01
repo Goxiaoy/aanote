@@ -31,10 +31,25 @@ class DbFactory{
     return _dbCompleter.future;
   }
 
-  Future<Database> _openInternal() async{
-    var dbPath=await getDatabasesPath();
-    var path = join(dbPath, dbName);
+  ///delete db
+  Future delete() async{
+    //close db?
+    if(_dbCompleter!=null){
+      //db opened
+      var db=await _dbCompleter.future;
+      db.close();
+    }
+    var path=await _getDbPath();
+    await deleteDatabase(path);
+  }
 
+  Future<String> _getDbPath() async{
+     var dbPath=await getDatabasesPath();
+     return join(dbPath, dbName);
+  }
+
+  Future<Database> _openInternal() async{
+      var path=await _getDbPath();
 //    // delete existing if any
 //    await deleteDatabase(path);
 
@@ -46,14 +61,19 @@ class DbFactory{
       try {
         await Directory(dirname(path)).create(recursive: true);
       } catch (_) {
-        //todo space?
       }
-      // Copy from asset
-      ByteData data = await rootBundle.load(join("assets", "initial.db"));
-      List<int> bytes =
-      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-      // Write and flush the bytes written
-      await File(path).writeAsBytes(bytes, flush: true);
+      try{
+        // Copy from asset
+        ByteData data = await rootBundle.load(join("assets", "initial.db"));
+        List<int> bytes =
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+        // Write and flush the bytes written
+        await File(path).writeAsBytes(bytes, flush: true);
+      }catch (_){
+        //todo asset not found error
+        //todo space error
+      }
+
 
     } else {
       _log.info("Opening existing database");
@@ -61,6 +81,7 @@ class DbFactory{
     var migrationOptions=options;
 // open the database
     var db = await databaseFactory.openDatabase(path,options:migrationOptions);
+    print("Open db in $path success");
     return db;
   }
 

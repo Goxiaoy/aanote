@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-
+import 'package:uuid/uuid.dart';
+import 'package:aanote/utils/convert.dart';
 part 'activity.g.dart';
 
-enum ActivityStatus{
+enum ActivityStatus {
   //active status.
   Active,
   //archived, cannot add new item
@@ -12,16 +12,20 @@ enum ActivityStatus{
 }
 
 @JsonSerializable()
-
-class Activity{
-  Activity({@required this.id,@required this.name,@required this.startTime}):status=ActivityStatus.Active,isFavorite=false,isPinned=false;
+class Activity {
+  Activity({String id, @required this.name, @required this.startTime})
+      : status = ActivityStatus.Active,
+        isFavorite = false,
+        id = id ?? Uuid().v4();
   String id;
   ActivityStatus status;
 
   String name;
+
   ///is favorite for user
+  @JsonKey(fromJson: intToBool, toJson: boolToInt)
   bool isFavorite;
-  bool isPinned;
+
   ///latest set favorite time
   DateTime favoriteTime;
 
@@ -33,18 +37,27 @@ class Activity{
   String desc;
 
   ///update favorite status
-  setFavorite({bool value=true}){
-    if(isFavorite==value){
+  setFavorite({bool value = true}) {
+    if (isFavorite == value) {
       return;
     }
-    isFavorite=value;
-    if(isFavorite){
-      favoriteTime=DateTime.now();
-    }else{
-      favoriteTime=null;
+    isFavorite = value;
+    if (isFavorite) {
+      favoriteTime = DateTime.now();
+    } else {
+      favoriteTime = null;
     }
   }
 
-  factory Activity.fromJson(Map<String, dynamic> json) => _$ActivityFromJson(json);
+  ///archive activity
+  archive() {
+    status = ActivityStatus.Archived;
+    endTime = endTime ?? DateTime.now();
+  }
+
+  factory Activity.fromJson(Map<String, dynamic> json) =>
+      _$ActivityFromJson(json);
   Map<String, dynamic> toJson() => _$ActivityToJson(this);
 }
+
+

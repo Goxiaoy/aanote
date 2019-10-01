@@ -31,6 +31,8 @@ dependencies:
   flutter_masked_text: ^0.8.0
   pull_to_refresh: ^1.5.6
   sqflite: ^1.1.6
+  uuid: 2.0.1
+
 
 
 dev_dependencies:
@@ -39,9 +41,10 @@ dev_dependencies:
   build_runner: ^1.0.0
   json_serializable: ^3.2.0
   sqflite_migration:
-    git:
-      url: git://github.com/Goxiaoy/sqflite_migration.git
-      ref: master
+    path: ../sqflite_migration
+#    git:
+#      url: git://github.com/Goxiaoy/sqflite_migration.git
+#      ref: master
 
 
 # For information on the generic Dart part of this file, see the
@@ -56,8 +59,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/initial.db
+#  assets:
+#    - assets/initial.db
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
