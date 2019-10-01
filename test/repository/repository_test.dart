@@ -1,8 +1,10 @@
 @Skip("sqflite cannot run on the machine.")
 
 import 'package:aanote/model/activity.dart';
+import 'package:aanote/model/user.dart';
 import 'package:aanote/persistent/db_factory.dart';
 import 'package:aanote/repositpory/activity_repository.dart';
+import 'package:aanote/repositpory/user_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
@@ -46,6 +48,44 @@ void main() async {
       var activeActivities = await ActivityRepository().getActive();
       expect(activeActivities.length, 1);
       expect(activeActivities.first.name, "A1");
+    });
+  });
+
+  group("user_repository_test", () {
+    Database db;
+    setUp(() async {
+      db = await DbFactory().open();
+    });
+    tearDownAll(() async {
+      await DbFactory().delete();
+    });
+    var userId = Uuid().v4();
+    test("add", () async {
+      for (var u in [
+        User(id: userId, name: "U1", isMe: true),
+        User(name: "U2"),
+      ]) {
+        await UserRepository().add(u);
+      }
+      expect(
+          Sqflite.firstIntValue(await db.rawQuery("select count(*) from user")),
+          2);
+    });
+
+    test("all", () async {
+      var all=await UserRepository().all();
+      print(all);
+      expect(all.length, 2);
+    });
+
+    test("findMe", () async {
+      var me=await UserRepository().findMe();
+      expect(me?.id, userId);
+    });
+
+    test("get", () async {
+      var user=await UserRepository().get(userId);
+      expect(user?.name, "U1");
     });
   });
 }

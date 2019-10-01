@@ -18,8 +18,8 @@ class ActivityStatisticsRepository{
   Future<List<ActivityPerDayStatistics>> getPerDayStatistics({@required String activityId,DateTime startDate,DateTime endDate}) async{
       var activity=Activity(id:"1",name: "Test Ac1",startTime: DateTime.now().add(Duration(days: -200)));
       var users=[
-        User("TestUser1",id: "1"),
-        User("TestUser2",id: "2")
+        User(name:"TestUser1",id: "1"),
+        User(name:"TestUser2",id: "2")
       ];
       var dates=Enumerable.range(1, 20).select((p)=> DateTime.now().add(Duration(days: -p))).toList();
       var ret=<ActivityPerDayStatistics>[];

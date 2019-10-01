@@ -19,7 +19,13 @@ class Initial_20190924 extends MigrationBase {
       [desc]       STRING
     );
     ''');
-    print("created table activity");
+    batch.execute('''
+    CREATE TABLE user (
+      id           CHAR (36) PRIMARY KEY,
+      name         STRING,
+      isMe   BOOLEAN
+    );
+    ''');
   }
 
   @override
