@@ -38,6 +38,7 @@ class DbFactory{
       //db opened
       var db=await _dbCompleter.future;
       db.close();
+      _dbCompleter=null;
     }
     var path=await _getDbPath();
     await deleteDatabase(path);
