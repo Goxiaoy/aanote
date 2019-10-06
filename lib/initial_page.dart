@@ -30,9 +30,12 @@ class _InitialPageState extends State<InitialPage> {
 
   Future _delayCanType() async {
     await Future.delayed(duration);
-    setState(() {
-      _canType = true;
-    });
+    //
+    if (mounted) {
+      setState(() {
+        _canType = true;
+      });
+    }
   }
 
   @override
