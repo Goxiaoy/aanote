@@ -16,7 +16,7 @@ class ActivityStatisticsRepository{
   }
 
   Future<List<ActivityPerDayStatistics>> getPerDayStatistics({@required String activityId,DateTime startDate,DateTime endDate}) async{
-      var activity=Activity(id:"1",name: "Test Ac1",startTime: DateTime.now().add(Duration(days: -200)));
+      var activity=Activity(id:"1",name: "Test Ac1",creationTime: DateTime.now().add(Duration(days: -200)));
       var users=[
         User(name:"TestUser1",id: "1"),
         User(name:"TestUser2",id: "2")

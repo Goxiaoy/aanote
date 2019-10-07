@@ -13,7 +13,7 @@ class Initial_20190924 extends MigrationBase {
       name         STRING,
       isFavorite   BOOLEAN,
       favoriteTime DATETIME,
-      startTime    DATETIME,
+      creationTime    DATETIME,
       endTime      DATETIME,
       color        STRING,
       [desc]       STRING

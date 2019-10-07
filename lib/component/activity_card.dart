@@ -54,7 +54,7 @@ class _ActivityCardState extends State<ActivityCard>
                 children: <Widget>[
                   new Text(
                     "StartTime: " +
-                        new DateFormat('yyyy-MM-dd').format(activity.startTime),
+                        new DateFormat('yyyy-MM-dd').format(activity.creationTime),
                   ),
                   if (activity.endTime != null)
                     new Text(

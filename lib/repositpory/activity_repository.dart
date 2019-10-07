@@ -13,7 +13,7 @@ class ActivityRepository extends SqliteRepositoryBase{
   ///get active activities
   Future<List<Activity>> getActive() async {
     return await db.then((db) async{
-      var raw=await db.query(table_activity,where: 'status = ?',whereArgs: [describeEnum(ActivityStatus.Active)]);
+      var raw=await db.query(table_activity,where: 'status = ?',whereArgs: [describeEnum(ActivityStatus.Active)],orderBy: 'creationTime desc');
       return raw.map((p)=>Activity.fromJson(p)).toList();
     });
 //    var ret=<Activity>[

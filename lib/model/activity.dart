@@ -13,10 +13,11 @@ enum ActivityStatus {
 
 @JsonSerializable()
 class Activity {
-  Activity({String id, @required this.name, @required this.startTime})
+  Activity({String id, @required this.name,DateTime creationTime})
       : status = ActivityStatus.Active,
         isFavorite = false,
-        id = id ?? Uuid().v4();
+        id = id ?? Uuid().v4(),
+        creationTime=creationTime??DateTime.now();
   String id;
   ActivityStatus status;
 
@@ -29,8 +30,9 @@ class Activity {
   ///latest set favorite time
   DateTime favoriteTime;
 
-  DateTime startTime;
   DateTime endTime;
+
+  DateTime creationTime;
 
   String color;
 
