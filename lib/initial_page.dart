@@ -42,33 +42,37 @@ class _InitialPageState extends State<InitialPage> {
   Widget build(BuildContext context) {
     var appModel = Provider.of<AppModel>(context);
     return Scaffold(
-        body: Column(
-      children: <Widget>[
-        SizedBox(
-          width: 250.0,
-          child: TypewriterAnimatedTextKit(
-            text: [_displayText],
-            textStyle: TextStyle(
-              fontSize: 30.0,
-            ),
-            duration: duration,
-            textAlign: TextAlign.start,
-            alignment: AlignmentDirectional.topStart,
-            isRepeatingAnimation: false, // or Alignment.topLeft
+        backgroundColor: const Color(0xff758a99),
+        body: Container(
+          alignment: Alignment.center,
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                width: 250.0,
+                child: TyperAnimatedTextKit(
+                  text: [_displayText],
+                  textStyle: TextStyle(
+                    fontSize: 30.0,
+                  ),
+                  duration: duration,
+                  textAlign: TextAlign.start,
+                  alignment: AlignmentDirectional.center,
+                  isRepeatingAnimation: false, // or Alignment.topLeft
+                ),
+              ),
+              if (_canType)
+                TextField(
+                  autofocus: true,
+                  onSubmitted: (value) async {
+                    var ret = await _submit(value);
+                    if (ret) {
+                      appModel.loadHasMe();
+                    }
+                  },
+                )
+            ],
           ),
-        ),
-        if (_canType)
-          TextField(
-            autofocus: true,
-            onSubmitted: (value) async {
-              var ret = await _submit(value);
-              if (ret) {
-                appModel.loadHasMe();
-              }
-            },
-          )
-      ],
-    ));
+        ));
   }
 
   Future<bool> _submit(String value) async {

@@ -1,19 +1,27 @@
 import 'package:aanote/repositpory/user_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AppModel extends ChangeNotifier{
 
   ///todo guide
-  bool isNeedGuide;
+  bool _isNeedGuide;
+
+  ///todo guide
+  bool get isNeedGuide => _isNeedGuide;
+
 
   ///has me added
-  bool hasMe=false;
+  bool _hasMe=false;
 
-  bool hasActivity;
+  ///has me added
+  bool get hasMe => _hasMe;
+
 
   ThemeData theme=ThemeData.dark();
 
 
+  ///load has me form db
   Future<bool> loadHasMe() async {
     if(hasMe){
       //do not have to load again
@@ -22,7 +30,7 @@ class AppModel extends ChangeNotifier{
     var me=await UserRepository().findMe();
     var newHasMe=me!=null;
     if(hasMe!=newHasMe){
-      hasMe=newHasMe;
+      _hasMe=newHasMe;
       notifyListeners();
     }
     return hasMe;

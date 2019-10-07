@@ -29,7 +29,7 @@ class _FocusingPageState extends State<FocusingPage> {
 
   /// build activities cards
   List<Widget> _buildActivitiesCards() {
-    return activeActivities.map((p) => ActivityCard(activity: p)).toList();
+    return activeActivities.map((p) => ActivityCard(activityId: p.id)).toList();
   }
 
   @override

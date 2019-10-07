@@ -5,8 +5,10 @@ import 'package:aanote/repositpory/sqlite_repository_base.dart';
 import 'package:flutter/foundation.dart';
 import 'package:queries/collections.dart';
 import 'package:queries/queries.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final String table_activity="activity";
+const String currentActivityKey="currentActivity";
 
 class ActivityRepository extends SqliteRepositoryBase{
 
@@ -16,13 +18,21 @@ class ActivityRepository extends SqliteRepositoryBase{
       var raw=await db.query(table_activity,where: 'status = ?',whereArgs: [describeEnum(ActivityStatus.Active)],orderBy: 'creationTime desc');
       return raw.map((p)=>Activity.fromJson(p)).toList();
     });
-//    var ret=<Activity>[
-//      Activity(id:"1",name: "Test1 Activity", startTime: DateTime.now().add(Duration(days: -7)))..desc="desc",
-//      Activity(
-//          id:"2",name: "Test2 Activity", startTime: DateTime.now().add(Duration(days: -3)))..setFavorite()];
-////    ret.sort((a, b) => a.favoriteTime.compareTo(b.favoriteTime));
-////    ret.sort((a, b) => int.parse(a.isFavorite.toString()));
-//    return ret;
+  }
+
+  Future<String> getCurrent() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String currentActivity=prefs.getString(currentActivityKey);
+    return currentActivity;
+  }
+
+  Future setCurrent(Activity activity) async{
+    if(activity.status!=ActivityStatus.Active){
+      // do not record
+      return;
+    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(currentActivityKey, activity.id);
   }
 
   Future<Activity> get(String id) async{

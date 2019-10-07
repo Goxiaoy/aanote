@@ -1,15 +1,16 @@
 import 'package:aanote/component/activity_note_list.dart';
 import 'package:aanote/component/activity_statistics_view.dart';
 import 'package:aanote/model/activity.dart';
+import 'package:aanote/repositpory/activity_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 
 class ActivityCard extends StatefulWidget {
-  final Activity activity;
   final double parallaxPercent;
+  final String activityId;
 
-  const ActivityCard({@required this.activity, this.parallaxPercent = 0.0});
+  ActivityCard({@ required this.activityId, this.parallaxPercent = 0.0});
 
   @override
   State<StatefulWidget> createState() {
@@ -19,13 +20,15 @@ class ActivityCard extends StatefulWidget {
 
 class _ActivityCardState extends State<ActivityCard>
     with TickerProviderStateMixin {
-  Activity get activity => widget.activity;
 
+  Activity activity;
   List<Tab>  _tabs;
 
   @override
   initState() {
     super.initState();
+    //todo
+    ActivityRepository().get(widget.activityId).then((p)=>activity=p);
     _tabs=<Tab>[
       Tab(child:ListTile(
         leading: Icon(Icons.pie_chart),
