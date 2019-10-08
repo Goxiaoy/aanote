@@ -1,4 +1,6 @@
 {
   "app_title": "AA 笔记",
-  "tell_name": "你好, 请告诉我你的名字..."
+  "tell_name": "你好, 请告诉我你的名字...",
+  "active": "进行中",
+  "archived": "已归档"
 }

@@ -15,9 +15,6 @@ class ActivityStatModel with ChangeNotifier {
 
   String get currentActivityId => _currentActivityId;
 
-  set currentActivityId(String currentActivityId) {
-    _currentActivityId = currentActivityId;
-  }
 
   Future<List<Activity>> loadActive () async{
     var items=await ActivityRepository().getActive();
@@ -32,4 +29,7 @@ class ActivityStatModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future setCurrentActivity(Activity activity) async{
+    await ActivityRepository().setCurrent(activity);
+  }
 }

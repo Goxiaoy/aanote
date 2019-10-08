@@ -21,7 +21,9 @@ class S implements WidgetsLocalizations {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  String get active => "Active";
   String get app_title => "AA Note";
+  String get archived => "Archived";
   String get tell_name => "Hi, please tell me your name...";
 }
 
@@ -36,7 +38,11 @@ class $zh extends S {
   TextDirection get textDirection => TextDirection.ltr;
 
   @override
+  String get archived => "已归档";
+  @override
   String get app_title => "AA 笔记";
+  @override
+  String get active => "进行中";
   @override
   String get tell_name => "你好, 请告诉我你的名字...";
 }

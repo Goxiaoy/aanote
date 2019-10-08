@@ -1,4 +1,6 @@
 {
   "app_title": "AA Note",
-  "tell_name": "Hi, please tell me your name..."
+  "tell_name": "Hi, please tell me your name...",
+  "active": "Active",
+  "archived": "Archived"
 }
