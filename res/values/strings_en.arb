@@ -2,5 +2,11 @@
   "app_title": "AA Note",
   "tell_name": "Hi, please tell me your name...",
   "active": "Active",
-  "archived": "Archived"
+  "archived": "Archived",
+  "activity": "Activity",
+  "defaultActivityName": "New Activity",
+  "activityName": "Activity name",
+  "activeActivityTooMuch": "Active activity too much may cause some performance issue",
+  "activeActivityTooMuchSuggestion": "Would you like to archive some of these activity?",
+  "noActiveActivity": "No active activity"
 }

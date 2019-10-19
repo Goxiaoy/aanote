@@ -29,7 +29,4 @@ class ActivityStatModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future setCurrentActivity(Activity activity) async{
-    await ActivityRepository().setCurrent(activity);
-  }
 }

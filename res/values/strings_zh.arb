@@ -2,5 +2,11 @@
   "app_title": "AA 笔记",
   "tell_name": "你好, 请告诉我你的名字...",
   "active": "进行中",
-  "archived": "已归档"
+  "archived": "已归档",
+  "activity": "活动",
+  "defaultActivityName": "新活动",
+  "activityName": "活动名称",
+  "activeActivityTooMuch": "进行中的活动过多可能影响App的响应速度",
+  "activeActivityTooMuchSuggestion": "你想归档下面的一些活动嘛?",
+  "noActiveActivity": "没有进行的活动"
 }

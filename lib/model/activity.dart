@@ -1,3 +1,4 @@
+import 'package:aanote/model/activity_participation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -13,11 +14,11 @@ enum ActivityStatus {
 
 @JsonSerializable()
 class Activity {
-  Activity({String id, @required this.name,DateTime creationTime})
+  Activity({String id, @required this.name})
       : status = ActivityStatus.Active,
         isFavorite = false,
-        id = id ?? Uuid().v4(),
-        creationTime=creationTime??DateTime.now();
+        id = id ?? Uuid().v4();
+
   String id;
   ActivityStatus status;
 
@@ -34,9 +35,14 @@ class Activity {
 
   DateTime creationTime;
 
+  DateTime lastModificationTime;
+
   String color;
 
   String desc;
+
+  @JsonKey(ignore: true)
+  List<ActivityParticipation> participators = new List<ActivityParticipation>();
 
   ///update favorite status
   setFavorite({bool value = true}) {
@@ -61,5 +67,3 @@ class Activity {
       _$ActivityFromJson(json);
   Map<String, dynamic> toJson() => _$ActivityToJson(this);
 }
-
-

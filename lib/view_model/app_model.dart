@@ -1,6 +1,7 @@
 import 'package:aanote/repositpory/user_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:aanote/model/user.dart';
 
 class AppModel extends ChangeNotifier{
 
@@ -10,16 +11,13 @@ class AppModel extends ChangeNotifier{
   ///todo guide
   bool get isNeedGuide => _isNeedGuide;
 
-
   ///has me added
-  bool _hasMe=false;
+  bool get hasMe => me!=null;
 
-  ///has me added
-  bool get hasMe => _hasMe;
+  User me;
 
 
   ThemeData theme=ThemeData.dark();
-
 
   ///load has me form db
   Future<bool> loadHasMe() async {
@@ -27,10 +25,9 @@ class AppModel extends ChangeNotifier{
       //do not have to load again
       return true;
     }
-    var me=await UserRepository().findMe();
-    var newHasMe=me!=null;
-    if(hasMe!=newHasMe){
-      _hasMe=newHasMe;
+    User oldMe=me;
+    me=await UserRepository().findMe();
+    if(me?.lastModificationTime!=oldMe?.lastModificationTime){
       notifyListeners();
     }
     return hasMe;

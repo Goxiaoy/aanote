@@ -14,6 +14,7 @@ class Initial_20190924 extends MigrationBase {
       isFavorite   BOOLEAN,
       favoriteTime DATETIME,
       creationTime    DATETIME,
+      lastModificationTime DATETIME,
       endTime      DATETIME,
       color        STRING,
       [desc]       STRING
@@ -23,6 +24,7 @@ class Initial_20190924 extends MigrationBase {
     CREATE TABLE user (
       id           CHAR (36) PRIMARY KEY,
       name         STRING,
+      lastModificationTime DATETIME,
       isMe   BOOLEAN
     );
     ''');

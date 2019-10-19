@@ -2,6 +2,7 @@ import 'package:aanote/model/activity_note_item.dart';
 import 'package:aanote/model/user.dart';
 import 'package:flutter/cupertino.dart';
 
+///link user to activity
 class ActivityParticipation{
 
   String id;

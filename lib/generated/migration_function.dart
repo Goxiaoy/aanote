@@ -3,7 +3,9 @@ import 'package:sqflite_auto_migration/sqflite_auto_migration.dart';
 
 import 'package:aanote/persistent/migration/initial_20190924.dart';
 
-final Map<int, MigrationBase> migrations={1: Initial_20190924()};
+final Map<int, MigrationBase> migrations={
+  1: Initial_20190924()
+};
 
 OpenDatabaseOptions get options => OpenDatabaseOptions(
     //latest version define in the migrations
@@ -29,6 +31,3 @@ OpenDatabaseOptions get options => OpenDatabaseOptions(
       }
       await batch.commit();
     });
-
-
-

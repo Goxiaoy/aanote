@@ -22,8 +22,14 @@ class S implements WidgetsLocalizations {
   TextDirection get textDirection => TextDirection.ltr;
 
   String get active => "Active";
+  String get activeActivityTooMuch => "Active activity too much may cause some performance issue";
+  String get activeActivityTooMuchSuggestion => "Would you like to archive some of these activity?";
+  String get activity => "Activity";
+  String get activityName => "Activity name";
   String get app_title => "AA Note";
   String get archived => "Archived";
+  String get defaultActivityName => "New Activity";
+  String get noActiveActivity => "No active activity";
   String get tell_name => "Hi, please tell me your name...";
 }
 
@@ -40,11 +46,23 @@ class $zh extends S {
   @override
   String get archived => "已归档";
   @override
+  String get activity => "活动";
+  @override
   String get app_title => "AA 笔记";
+  @override
+  String get activityName => "活动名称";
+  @override
+  String get activeActivityTooMuchSuggestion => "你想归档下面的一些活动嘛?";
   @override
   String get active => "进行中";
   @override
+  String get activeActivityTooMuch => "进行中的活动过多可能影响App的响应速度";
+  @override
   String get tell_name => "你好, 请告诉我你的名字...";
+  @override
+  String get defaultActivityName => "新活动";
+  @override
+  String get noActiveActivity => "没有进行的活动";
 }
 
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {

@@ -10,7 +10,7 @@ part 'user.g.dart';
 @JsonSerializable()
 
 class User{
-  User({String id,@required this.name,this.isMe=false}):id=id??Uuid().v4();
+  User({String id,@required this.name,this.isMe=false}):id=id??Uuid().v4(),lastModificationTime=DateTime.now();
 
   String id;
 
@@ -18,6 +18,9 @@ class User{
   bool isMe;
   ///display name
   String name;
+
+  DateTime lastModificationTime;
+
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);

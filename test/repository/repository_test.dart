@@ -27,7 +27,7 @@ void main() async {
 
     var a1Id = Uuid().v4();
     test("activity_repository_add", () async {
-      var activity = Activity(id: a1Id, name: "A1", creationTime: DateTime.now());
+      var activity = Activity(id: a1Id, name: "A1");
       await ActivityRepository().add(activity);
       print(await db.rawQuery("select * from activity"));
       expect(
@@ -42,7 +42,7 @@ void main() async {
     });
 
     test("activity_repository_getActive", () async {
-      var archived = Activity(name: "A2", creationTime: DateTime.now())..archive();
+      var archived = Activity(name: "A2")..archive();
       await ActivityRepository().add(archived);
       print("add sucess");
       var activeActivities = await ActivityRepository().getActive();
