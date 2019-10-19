@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_migration/sqflite_migration.dart';
+import 'package:sqflite_auto_migration/sqflite_auto_migration.dart';
 
 import 'package:aanote/persistent/migration/initial_20190924.dart';
 
