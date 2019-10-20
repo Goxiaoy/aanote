@@ -141,14 +141,14 @@ class ActivityRepository extends SqliteRepositoryBase {
   ///change favorite status
   Future<Activity> changeFavorite(Activity activity) async{
     await db.then((db) async{
-      await db.rawUpdate("update $table_activity set isFavorite = ? where id = ?",[activity.isFavorite,activity.id]);
+      await db.rawUpdate("update $table_activity set isFavorite = ?, lastModificationTime = ?  where id = ?",[activity.isFavorite,DateTime.now().toIso8601String(),activity.id]);
     });
     return activity;
   }
 
   Future changeArchived(String activityId,ActivityStatus status) async{
     await db.then((db) async{
-      await db.rawUpdate("update $table_activity set status = ? where id = ?",[describeEnum(status),activityId]);
+      await db.rawUpdate("update $table_activity set status = ?, lastModificationTime = ? where id = ?",[describeEnum(status),DateTime.now().toIso8601String(),activityId]);
     });
   }
 }

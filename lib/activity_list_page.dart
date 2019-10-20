@@ -21,13 +21,14 @@ class _ActivityListPageState extends State<ActivityListPage> {
   ///current page Index
   int _currentPageIndex = 0;
 
-  List<Activity> _archivedActivity=List<Activity>();
+  List<Activity> _archivedActivity = List<Activity>();
 
   ///per page count
   static const int _perPageCount = 20;
   ActivityStatModel activityStatModel;
 
-  RefreshController _refreshController = RefreshController(initialRefresh: true);
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +51,14 @@ class _ActivityListPageState extends State<ActivityListPage> {
         controller: _refreshController,
         enablePullDown: false,
         enablePullUp: true,
+        footer: ClassicFooter(
+          loadStyle: LoadStyle.ShowWhenLoading,
+          noDataText: "",
+        ),
         onLoading: _onLoading,
         child: ListView(
           children: <Widget>[
             _buildActive(context),
-            Divider(),
             _buildArchived(context),
           ],
         ),
@@ -82,9 +86,7 @@ class _ActivityListPageState extends State<ActivityListPage> {
           var activities = activityStateModel.active;
           if (activities == null || activities.length == 0) {
             // add empty card
-            return Card(
-              child: Text(S.of(context).noActiveActivity),
-            );
+            return _buildActivityCard(null);
           } else {
             return Column(
               children: activities.map((f) {
@@ -98,29 +100,55 @@ class _ActivityListPageState extends State<ActivityListPage> {
   }
 
   Widget _buildArchived(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(S.of(context).archived),
-        Divider(),
-        //ListView()
-      ],
-    );
+    return _archivedActivity.length > 0
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(S.of(context).archived),
+              Divider(),
+              Column(
+                children: _archivedActivity.map((f) {
+                  return _buildActivityCard(f);
+                }).toList(),
+              )
+            ],
+          )
+        : Column();
   }
 
   Widget _buildActivityCard(Activity activity) {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 85,
-        child: InkWell(
-          onTap: () => onTap(context, activity),
-          child: Card(
-            elevation: 10,
-            color: Color(activity.color),
-            margin: EdgeInsets.all(8),
-            child: Text(activity.name),
-          ),
-        ));
+        height: 100,
+        child: activity != null
+            ? Card(
+                elevation: 10,
+                color: Color(activity.color),
+                margin: EdgeInsets.all(10),
+                child: InkWell(
+                  onTap: () => onTap(context, activity),
+                  child: Text(activity.name),
+                ),
+              )
+            : Card(
+                elevation: 10,
+                color: Theme.of(context).primaryColor,
+                margin: EdgeInsets.all(8),
+                child: InkWell(
+                  onTap: () {
+                    //go to add
+                    Navigator.of(context)
+                        .pushNamed(AppRoute.activityEdit, arguments: null);
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(Icons.add_circle),
+                      Text(S.of(context).noActiveActivity)
+                    ],
+                  ),
+                ),
+              ));
   }
 
   void onTap(BuildContext context, Activity activity) async {
@@ -129,23 +157,23 @@ class _ActivityListPageState extends State<ActivityListPage> {
             activity.id, activity.status == ActivityStatus.Active));
   }
 
-  void _onLoading() async{
-    var archivedPaged=await ActivityRepository().getArchived(pageIndex: _currentPageIndex,pageCount: _perPageCount);
-    _currentPageIndex++;
+  void _onLoading() async {
+    var archivedPaged = await ActivityRepository()
+        .getArchived(pageIndex: _currentPageIndex, pageCount: _perPageCount);
     //add items to archived
-    if(archivedPaged.items.length==0){
+    if (archivedPaged.items.length == 0) {
       //no more
       _refreshController.loadNoData();
       return;
-    }else{
+    } else {
+      if (archivedPaged.items.length == _perPageCount) {
+        _currentPageIndex++;
+      }
       _archivedActivity.addAll(archivedPaged.items);
-      if(mounted){
-        setState(() {
-
-        });
+      if (mounted) {
+        setState(() {});
       }
       _refreshController.loadComplete();
     }
   }
-
 }
