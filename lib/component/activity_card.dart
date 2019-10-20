@@ -61,66 +61,71 @@ class _ActivityCardState extends State<ActivityCard>
   }
 
   Widget _buildActivityDes(Activity activity) {
-    if(activity!=null){
-      return  Card(
+    if (activity != null) {
+      return Card(
           child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                if (activity.desc != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5, top: 5),
-                    child: new Text(
-                      activity.desc,
-                    ),
-                  ),
-                Row(
-                  children: <Widget>[
-                    new Text(
-                      "StartTime: " +
-                          new DateFormat('yyyy-MM-dd').format(activity.creationTime),
-                    ),
-                    if (activity.endTime != null)
-                      new Text(
-                        "EndTime: " +
-                            new DateFormat('yyyy-MM-dd').format(activity.endTime),
-                      )
-                  ],
-                )
-              ]));
-    }else{
-      return Shimmer.fromColors(child: Container(height: 50,), baseColor: Colors.grey[400], highlightColor: Colors.white);
-    }
-    
-  }
-
-  List<PopupMenuEntry> _buildPopupMenu() {
-    var ret = <PopupMenuEntry>[];
-    if (activity.status == ActivityStatus.Active) {
-      //active status
-      ret.addAll([
-        const PopupMenuItem(
-          child: ListTile(
-            leading: Icon(Icons.archive),
-            title: Text('archive'),
-          ),
-        ),
-        const PopupMenuItem(
-          child: ListTile(
-            leading: Icon(Icons.people),
-            title: Text('people'),
-          ),
-        ),
-      ]);
+            if (activity.desc != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5, top: 5),
+                child: new Text(
+                  activity.desc,
+                ),
+              ),
+            Row(
+              children: <Widget>[
+                new Text(
+                  "StartTime: " +
+                      new DateFormat('yyyy-MM-dd')
+                          .format(activity.creationTime),
+                ),
+                if (activity.endTime != null)
+                  new Text(
+                    "EndTime: " +
+                        new DateFormat('yyyy-MM-dd').format(activity.endTime),
+                  )
+              ],
+            )
+          ]));
     } else {
-      //archived
-      ret.add(const PopupMenuItem(
-        child: Icon(Icons.unarchive),
-      ));
+      return Shimmer.fromColors(
+          child: Container(
+            height: 50,
+          ),
+          baseColor: Colors.grey[400],
+          highlightColor: Colors.white);
     }
-    return ret;
   }
 
-  void _backToListPage(){
+//  List<PopupMenuEntry> _buildPopupMenu() {
+//    var ret = <PopupMenuEntry>[];
+//    if (activity.status == ActivityStatus.Active) {
+//      //active status
+//      ret.addAll([
+//        const PopupMenuItem(
+//          child: ListTile(
+//            leading: Icon(Icons.archive),
+//            title: Text('archive'),
+//          ),
+//        ),
+//        const PopupMenuItem(
+//          child: ListTile(
+//            leading: Icon(Icons.people),
+//            title: Text('people'),
+//          ),
+//        ),
+//      ]);
+//    } else {
+//      //archived
+//      ret.add(const PopupMenuItem(
+//        child: Icon(Icons.unarchive),
+//      ));
+//    }
+//    return ret;
+//  }
+
+  void _backToListPage() {
     ActivityRepository().setCurrent(null);
     Navigator.pushReplacementNamed(context, AppRoute.activityList);
   }
@@ -143,7 +148,8 @@ class _ActivityCardState extends State<ActivityCard>
 
   Widget _buildAppBar() {
     return SliverAppBar(
-      leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: _backToListPage),
+      leading:
+          IconButton(icon: Icon(Icons.arrow_back), onPressed: _backToListPage),
       floating: false,
       pinned: true,
       actions: <Widget>[
@@ -155,15 +161,23 @@ class _ActivityCardState extends State<ActivityCard>
         ),
         IconButton(
             icon: Icon(
-              activity?.isFavorite==true ? Icons.star : Icons.star_border,
+              activity?.isFavorite == true ? Icons.star : Icons.star_border,
               color: Colors.red[500],
             ),
-            onPressed: null),
-        PopupMenuButton(
-          itemBuilder: (BuildContext context) => _buildPopupMenu(),
-        )
+            onPressed: () async {
+              activity.isFavorite = !activity.isFavorite;
+              await ActivityRepository().changeFavorite(activity);
+              setState(() {});
+            }),
+        IconButton(
+            icon: Icon(
+              Icons.settings
+            ),
+            onPressed: () async {
+              Navigator.pushNamed(context, AppRoute.activityEdit,arguments: activity);
+            }),
       ],
-      title: Text(activity?.name??""),
+      title: Text(activity?.name ?? ""),
       backgroundColor: Colors.grey,
     );
   }

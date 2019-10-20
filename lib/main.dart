@@ -1,6 +1,7 @@
 import 'package:aanote/activity_list_page.dart';
 import 'package:aanote/component/activity_card.dart';
 import 'package:aanote/initial_page.dart';
+import 'package:aanote/persistent/db_factory.dart';
 import 'package:aanote/view_model/activity_stat_model.dart';
 import 'package:aanote/view_model/app_model.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ import 'app_route.dart';
 import 'package:logging/logging.dart';
 
 
+AppModel appModel=AppModel();
+
 void main() async{
   if(!inProduction){
     Sqflite.devSetDebugModeOn(true);
@@ -29,6 +32,7 @@ void main() async{
 
   //init
   await SharedPreferences.getInstance();
+  await appModel.loadHasMe();
   runApp(new MyApp());
 }
 
@@ -42,14 +46,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp>{
 
-  final AppModel _appModel=AppModel();
   final ActivityStatModel _activityStatModel=ActivityStatModel();
 
 
   @override
   void initState() {
     super.initState();
-    _appModel.loadHasMe();
     _activityStatModel.init();
   }
 
@@ -57,7 +59,7 @@ class _MyAppState extends State<MyApp>{
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AppModel>.value(value: _appModel),
+        ChangeNotifierProvider<AppModel>.value(value: appModel),
         ChangeNotifierProvider<ActivityStatModel>.value(value: _activityStatModel),
       ],
       child: Consumer2<AppModel,ActivityStatModel>(

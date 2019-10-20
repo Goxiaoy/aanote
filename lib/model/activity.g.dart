@@ -25,7 +25,7 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) {
     ..lastModificationTime = json['lastModificationTime'] == null
         ? null
         : DateTime.parse(json['lastModificationTime'] as String)
-    ..color = json['color'] as String
+    ..color = json['color'] as int
     ..desc = json['desc'] as String;
 }
 

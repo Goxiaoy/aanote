@@ -8,5 +8,6 @@
   "activityName": "活动名称",
   "activeActivityTooMuch": "进行中的活动过多可能影响App的响应速度",
   "activeActivityTooMuchSuggestion": "你想归档下面的一些活动嘛?",
-  "noActiveActivity": "没有进行的活动"
+  "noActiveActivity": "没有进行的活动",
+  "createActivity": "创建活动"
 }

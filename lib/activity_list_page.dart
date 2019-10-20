@@ -27,6 +27,7 @@ class _ActivityListPageState extends State<ActivityListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(S.of(context).activity),
         centerTitle: true,
         actions: <Widget>[

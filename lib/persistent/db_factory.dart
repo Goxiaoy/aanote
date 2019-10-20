@@ -52,7 +52,7 @@ class DbFactory {
   Future<Database> _openInternal() async {
     var path = await _getDbPath();
     // delete existing if any
-    await deleteDatabase(path);
+    //await deleteDatabase(path);
 
     var exists = await databaseExists(path);
     if (!exists) {

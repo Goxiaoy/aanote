@@ -28,6 +28,7 @@ class S implements WidgetsLocalizations {
   String get activityName => "Activity name";
   String get app_title => "AA Note";
   String get archived => "Archived";
+  String get createActivity => "Create Activity";
   String get defaultActivityName => "New Activity";
   String get noActiveActivity => "No active activity";
   String get tell_name => "Hi, please tell me your name...";
@@ -45,6 +46,8 @@ class $zh extends S {
 
   @override
   String get archived => "已归档";
+  @override
+  String get createActivity => "创建活动";
   @override
   String get activity => "活动";
   @override

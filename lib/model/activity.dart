@@ -1,4 +1,5 @@
 import 'package:aanote/model/activity_participation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -37,7 +38,7 @@ class Activity {
 
   DateTime lastModificationTime;
 
-  String color;
+  int color;
 
   String desc;
 
@@ -67,3 +68,4 @@ class Activity {
       _$ActivityFromJson(json);
   Map<String, dynamic> toJson() => _$ActivityToJson(this);
 }
+
