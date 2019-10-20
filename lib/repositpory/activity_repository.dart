@@ -63,8 +63,14 @@ class ActivityRepository extends SqliteRepositoryBase {
   }
 
   ///get archived activities
-  Future<PagedDto<Activity>> getArchived(
-      {int pageIndex = 0, int pageCount = 7}) async {}
+  Future<PagedDto<Activity>> getArchived ({int pageIndex = 0, int pageCount = 7}) async {
+      return await db.then((db)async{
+        var totalCount=Sqflite.firstIntValue(await db.rawQuery("select count(*) from $table_activity where status = ?",[describeEnum(ActivityStatus.Archived)]));
+        var map=await db.query(table_activity,offset: pageIndex*pageCount,limit: pageCount,where: 'status = ?',whereArgs: [describeEnum(ActivityStatus.Archived)]);
+        var items=map.map((p)=>Activity.fromJson(p)).toList();
+        return PagedDto<Activity>(items: items,totalCount: totalCount);
+      });
+  }
 
   ///get activity notes group by date. default take latest 7 days
   Future<PagedDto<IGrouping<DateTime, ActivityNote>>> getNotesGroupedByDate(

@@ -2,9 +2,11 @@ import 'dart:ui';
 
 import 'package:aanote/app_route.dart';
 import 'package:aanote/model/activity.dart';
+import 'package:aanote/repositpory/activity_repository.dart';
 import 'package:aanote/view_model/activity_stat_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tuple/tuple.dart';
 
 import 'generated/i18n.dart';
@@ -19,11 +21,13 @@ class _ActivityListPageState extends State<ActivityListPage> {
   ///current page Index
   int _currentPageIndex = 0;
 
-  List<Activity> _activeActivities;
+  List<Activity> _archivedActivity=List<Activity>();
 
   ///per page count
   static const int _perPageCount = 20;
   ActivityStatModel activityStatModel;
+
+  RefreshController _refreshController = RefreshController(initialRefresh: true);
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +46,18 @@ class _ActivityListPageState extends State<ActivityListPage> {
               }),
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          _buildActive(context),
-          Divider(),
-          _buildArchived(context),
-        ],
+      body: SmartRefresher(
+        controller: _refreshController,
+        enablePullDown: false,
+        enablePullUp: true,
+        onLoading: _onLoading,
+        child: ListView(
+          children: <Widget>[
+            _buildActive(context),
+            Divider(),
+            _buildArchived(context),
+          ],
+        ),
       ),
     );
   }
@@ -118,4 +128,24 @@ class _ActivityListPageState extends State<ActivityListPage> {
         arguments: Tuple2<String, bool>(
             activity.id, activity.status == ActivityStatus.Active));
   }
+
+  void _onLoading() async{
+    var archivedPaged=await ActivityRepository().getArchived(pageIndex: _currentPageIndex,pageCount: _perPageCount);
+    _currentPageIndex++;
+    //add items to archived
+    if(archivedPaged.items.length==0){
+      //no more
+      _refreshController.loadNoData();
+      return;
+    }else{
+      _archivedActivity.addAll(archivedPaged.items);
+      if(mounted){
+        setState(() {
+
+        });
+      }
+      _refreshController.loadComplete();
+    }
+  }
+
 }

@@ -42,16 +42,7 @@ class _ActivityNoteListSate extends State<ActivityNoteList>{
     super.initState();
   }
 
-  void _onRefresh() async{
-    // monitor network fetch
-    var newData=await ActivityRepository().getNotesGroupedByDate(activityId: activityId,pageIndex: currentIndex);
-    groupedNotes.addAll(newData.items);
-    // if failed,use refreshFailed()
-    _refreshController.refreshCompleted();
-  }
-
   void _onLoading() async{
-    // monitor network fetch
     var newData=await ActivityRepository().getNotesGroupedByDate(activityId: activityId,pageIndex: currentIndex);
     // if failed,use loadFailed(),if no data return,use LoadNodata()
     groupedNotes.addAll(newData.items);
@@ -80,35 +71,9 @@ class _ActivityNoteListSate extends State<ActivityNoteList>{
   @override
   Widget build(BuildContext context) {
     return SmartRefresher(
-      enablePullDown: true,
+      enablePullDown: false,
       enablePullUp: true,
-      header: WaterDropHeader(),
-      footer: CustomFooter(
-        builder: (BuildContext context,LoadStatus mode){
-          Widget body ;
-          if(mode==LoadStatus.idle){
-            body =  Text("pull up load");
-          }
-          else if(mode==LoadStatus.loading){
-            body =  CupertinoActivityIndicator();
-          }
-          else if(mode == LoadStatus.failed){
-            body = Text("Load Failed!Click retry!");
-          }
-          else if(mode == LoadStatus.canLoading){
-            body = Text("release to load more");
-          }
-          else{
-            body = Text("No more Data");
-          }
-          return Container(
-            height: 55.0,
-            child: Center(child:body),
-          );
-        },
-      ),
       controller: _refreshController,
-      onRefresh: _onRefresh,
       onLoading: _onLoading,
       child: ListView.builder(
         itemBuilder: (c, i) => _buildItem(context, groupedNotes[i]),
