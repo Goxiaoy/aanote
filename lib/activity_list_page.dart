@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:aanote/app_route.dart';
 import 'package:aanote/model/activity.dart';
 import 'package:aanote/view_model/activity_stat_model.dart';
@@ -76,7 +78,7 @@ class _ActivityListPageState extends State<ActivityListPage> {
           } else {
             return Column(
               children: activities.map((f) {
-                return Container(child: _buildActivityCard(f));
+                return _buildActivityCard(f);
               }).toList(),
             );
           }
@@ -97,12 +99,18 @@ class _ActivityListPageState extends State<ActivityListPage> {
   }
 
   Widget _buildActivityCard(Activity activity) {
-    return InkWell(
-      onTap: () => onTap(context, activity),
-      child: Card(
-        child: Text(activity.name),
-      ),
-    );
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: 85,
+        child: InkWell(
+          onTap: () => onTap(context, activity),
+          child: Card(
+            elevation: 10,
+            color: Color(activity.color),
+            margin: EdgeInsets.all(8),
+            child: Text(activity.name),
+          ),
+        ));
   }
 
   void onTap(BuildContext context, Activity activity) async {

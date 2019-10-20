@@ -5,7 +5,8 @@ import 'package:aanote/repositpory/activity_repository.dart';
 import 'package:aanote/view_model/activity_stat_model.dart';
 import 'package:aanote/view_model/app_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:flutter_colorpicker/block_picker.dart';
+import 'package:flutter_colorpicker/material_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:logging/logging.dart';
 import 'package:aanote/generated/i18n.dart';
@@ -105,21 +106,18 @@ class _ActivityEditState extends State<ActivityEdit> {
                       return Container(
                         padding: EdgeInsets.all(8),
                         height: 300,
-                        child: MaterialColorPicker(
-                          onColorChange: (Color color) {
-                            // Handle color changes
-                            activity.color = color.value;
-                            //form change
-                            _editSave();
-                            //theme change
-                            setState(() {});
-                          },
-                          shrinkWrap: true,
-                          circleSize: 35,
-                          spacing: 10,
-                          selectedColor: Color(activity.color),
-                          colors: snapshot.data,
-                        ),
+                        child: BlockPicker(
+                           pickerColor: Color(activity.color),
+                           onColorChanged: (Color color) {
+                             // Handle color changes
+                             activity.color = color.value;
+                             //form change
+                             _editSave();
+                             //theme change
+                             setState(() {});
+                           },
+                          availableColors: snapshot.data,
+                         ),
                       );
                     }
                   })
@@ -153,7 +151,7 @@ class _ActivityEditState extends State<ActivityEdit> {
               Consumer<ActivityStatModel>(
                   builder: (context, model, child) => IconButton(
                       icon: Icon(Icons.check),
-                      onPressed: () async => _addSave(model)))
+                      onPressed: () async => Navigator.pop(context)))
           ],
           automaticallyImplyLeading: false,
           leading: !_isAdd
