@@ -14,9 +14,11 @@ class InitialPage extends StatefulWidget {
 class _InitialPageState extends State<InitialPage> {
   String userName = null;
 
-  final Duration duration = Duration(milliseconds: 2500);
+  final Duration duration = Duration(milliseconds: 2000);
 
   bool _canType = false;
+
+  String _currentTyped;
 
   String _displayText;
   @override
@@ -43,43 +45,68 @@ class _InitialPageState extends State<InitialPage> {
     var appModel = Provider.of<AppModel>(context);
     return Scaffold(
         backgroundColor: const Color(0xff758a99),
-        body: Container(
-          alignment: Alignment.center,
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                width: 250.0,
-                child: TyperAnimatedTextKit(
-                  text: [_displayText],
-                  textStyle: TextStyle(
-                    fontSize: 30.0,
+        resizeToAvoidBottomPadding: false,
+        body: Center(
+            child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.6,
+                height: MediaQuery.of(context).size.height,
+                child: Center(
+                    child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      TyperAnimatedTextKit(
+                        text: [_displayText],
+                        textStyle: TextStyle(
+                          fontSize: 30.0,
+                        ),
+                        duration: duration,
+                        textAlign: TextAlign.start,
+                        alignment: AlignmentDirectional.center,
+                        isRepeatingAnimation: false, // or Alignment.topLeft
+                      ),
+                      if (_canType)
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: TextField(
+                                autofocus: true,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _currentTyped = value;
+                                  });
+                                },
+                                onSubmitted: (value) async {
+                                  await _submit(appModel);
+                                },
+                              ),
+                            ),
+                            if (_currentTyped != null &&
+                                _currentTyped.isNotEmpty)
+                              IconButton(
+                                icon: Icon(Icons.arrow_forward),
+                                onPressed: () async {
+                                  await _submit(appModel);
+                                },
+                              )
+                          ],
+                        ),
+                    ],
                   ),
-                  duration: duration,
-                  textAlign: TextAlign.start,
-                  alignment: AlignmentDirectional.center,
-                  isRepeatingAnimation: false, // or Alignment.topLeft
-                ),
-              ),
-              if (_canType)
-                TextField(
-                  autofocus: true,
-                  onSubmitted: (value) async {
-                    var ret = await _submit(value);
-                    if (ret) {
-                      appModel.loadHasMe();
-                    }
-                  },
-                )
-            ],
-          ),
-        ));
+                )))));
   }
 
-  Future<bool> _submit(String value) async {
+  Future<bool> _submit(AppModel appModel) async {
+    var ret = false;
+    var value = _currentTyped;
     if (value == null || value.isEmpty) {
-      return false;
+    } else {
+      await UserRepository().add(User(name: value, isMe: true));
+      ret = true;
     }
-    await UserRepository().add(User(name: value, isMe: true));
-    return true;
+    if (ret) {
+      await appModel.loadHasMe();
+    }
+    return ret;
   }
 }

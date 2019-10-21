@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:aanote/app_route.dart';
 import 'package:aanote/model/activity.dart';
 import 'package:aanote/model/activity_participation.dart';
@@ -45,7 +47,7 @@ class _ActivityEditState extends State<ActivityEdit> {
           .then((p) {
         activity = p[0] as Activity;
         var colors = p[1] as List<ColorSwatch>;
-        activity.color = colors.first.value;
+        activity.color = colors[Random().nextInt(colors.length)].value;
         setState(() {});
       });
     }
