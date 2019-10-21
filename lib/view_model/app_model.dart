@@ -33,4 +33,11 @@ class AppModel extends ChangeNotifier{
     return hasMe;
   }
 
+  ThemeData getTheme({bool platformDark=false}){
+    if(platformDark){
+      return ThemeData.dark();
+    }else{
+      return ThemeData.light();
+    }
+  }
 }

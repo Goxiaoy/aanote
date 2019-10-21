@@ -1,11 +1,9 @@
 import 'package:aanote/activity_list_page.dart';
 import 'package:aanote/component/activity_card.dart';
 import 'package:aanote/initial_page.dart';
-import 'package:aanote/persistent/db_factory.dart';
 import 'package:aanote/view_model/activity_stat_model.dart';
 import 'package:aanote/view_model/app_model.dart';
 import 'package:flutter/material.dart';
-import 'package:aanote/main_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -15,18 +13,19 @@ import 'package:aanote/utils/environment.dart';
 import 'package:sqflite/sqflite.dart';
 import 'app_route.dart';
 import 'package:logging/logging.dart';
+import 'package:flutter/services.dart';
 
+AppModel appModel = AppModel();
 
-AppModel appModel=AppModel();
-
-void main() async{
-  if(!inProduction){
+void main() async {
+  if (!inProduction) {
     Sqflite.devSetDebugModeOn(true);
   }
   Logger.root.level = Level.FINE;
   Logger.root.onRecord.listen((LogRecord rec) {
     if (!inProduction) {
-      print('[${rec.level.name}][${rec.time}][${rec.loggerName}]: ${rec.message}');
+      print(
+          '[${rec.level.name}][${rec.time}][${rec.loggerName}]: ${rec.message}');
     }
   });
 
@@ -34,20 +33,17 @@ void main() async{
   await SharedPreferences.getInstance();
   await appModel.loadHasMe();
   runApp(new MyApp());
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
 }
-
 
 class MyApp extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() =>_MyAppState();
-
+  State<StatefulWidget> createState() => _MyAppState();
 }
 
-
-class _MyAppState extends State<MyApp>{
-
-  final ActivityStatModel _activityStatModel=ActivityStatModel();
-
+class _MyAppState extends State<MyApp> {
+  final ActivityStatModel _activityStatModel = ActivityStatModel();
 
   @override
   void initState() {
@@ -60,10 +56,11 @@ class _MyAppState extends State<MyApp>{
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppModel>.value(value: appModel),
-        ChangeNotifierProvider<ActivityStatModel>.value(value: _activityStatModel),
+        ChangeNotifierProvider<ActivityStatModel>.value(
+            value: _activityStatModel),
       ],
-      child: Consumer2<AppModel,ActivityStatModel>(
-        builder: (context, appModel,asModel, child) {
+      child: Consumer2<AppModel, ActivityStatModel>(
+        builder: (context, appModel, asModel, child) {
           return MaterialApp(
             localizationsDelegates: [
               S.delegate,
@@ -73,15 +70,20 @@ class _MyAppState extends State<MyApp>{
               GlobalWidgetsLocalizations.delegate,
             ],
             supportedLocales: S.delegate.supportedLocales,
-            theme: appModel.theme,
-            home: !appModel.hasMe ? InitialPage() : (asModel.currentActivityId!=null?ActivityCard(activityId: asModel.currentActivityId,):ActivityListPage()),
+            theme: appModel.getTheme(),
+            darkTheme: appModel.getTheme(platformDark: true),
+            home: !appModel.hasMe
+                ? InitialPage()
+                : (asModel.currentActivityId != null
+                    ? ActivityCard(
+                        activityId: asModel.currentActivityId,
+                      )
+                    : ActivityListPage()),
             //initialRoute: AppRoute.initial,
-            onGenerateRoute: AppRoute.generateRoute,//MainPage
+            onGenerateRoute: AppRoute.generateRoute, //MainPage
           );
         },
       ),
     );
   }
 }
-
-

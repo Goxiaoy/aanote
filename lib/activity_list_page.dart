@@ -28,7 +28,13 @@ class _ActivityListPageState extends State<ActivityListPage> {
   ActivityStatModel activityStatModel;
 
   RefreshController _refreshController =
-      RefreshController(initialRefresh: true);
+      RefreshController(initialRefresh: true,initialLoadStatus: LoadStatus.loading);
+
+  @override
+  void initState() {
+    super.initState();
+    _onLoading();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +62,14 @@ class _ActivityListPageState extends State<ActivityListPage> {
           noDataText: "",
         ),
         onLoading: _onLoading,
-        child: ListView(
-          children: <Widget>[
-            _buildActive(context),
-            _buildArchived(context),
-          ],
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: ListView(
+            children: <Widget>[
+              _buildActive(context),
+              _buildArchived(context),
+            ],
+          ),
         ),
       ),
     );
@@ -79,8 +88,11 @@ class _ActivityListPageState extends State<ActivityListPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(S.of(context).active),
-        Divider(),
+        Padding(
+          padding: EdgeInsets.all(4),
+          child: Text(S.of(context).active,
+              style: Theme.of(context).textTheme.subtitle),
+        ),
         Consumer<ActivityStatModel>(
             builder: (context, activityStateModel, child) {
           var activities = activityStateModel.active;
@@ -105,7 +117,6 @@ class _ActivityListPageState extends State<ActivityListPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(S.of(context).archived),
-              Divider(),
               Column(
                 children: _archivedActivity.map((f) {
                   return _buildActivityCard(f);
@@ -124,7 +135,6 @@ class _ActivityListPageState extends State<ActivityListPage> {
             ? Card(
                 elevation: 10,
                 color: Color(activity.color),
-                margin: EdgeInsets.all(10),
                 child: InkWell(
                   onTap: () => onTap(context, activity),
                   child: Text(activity.name),
@@ -133,7 +143,6 @@ class _ActivityListPageState extends State<ActivityListPage> {
             : Card(
                 elevation: 10,
                 color: Theme.of(context).primaryColor,
-                margin: EdgeInsets.all(8),
                 child: InkWell(
                   onTap: () {
                     //go to add
@@ -142,6 +151,7 @@ class _ActivityListPageState extends State<ActivityListPage> {
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(Icons.add_circle),
                       Text(S.of(context).noActiveActivity)
