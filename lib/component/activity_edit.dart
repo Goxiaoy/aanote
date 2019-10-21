@@ -37,17 +37,19 @@ class _ActivityEditState extends State<ActivityEdit> {
 
   bool _isAdd = false;
 
+  AppModel _appModel;
+
   @override
   void initState() {
     super.initState();
     if (activity == null) {
       _isAdd = true;
       //get default setting
-      Future.wait([ActivityRepository().getDefault(), getAvailableColors()])
-          .then((p) {
-        activity = p[0] as Activity;
-        var colors = p[1] as List<ColorSwatch>;
-        activity.color = colors[Random().nextInt(colors.length)].value;
+      ActivityRepository().getDefault().then((p) {
+        activity = p;
+        activity.color = _appModel
+            .availableColors[Random().nextInt(_appModel.availableColors.length)]
+            .value;
         setState(() {});
       });
     }
@@ -68,72 +70,56 @@ class _ActivityEditState extends State<ActivityEdit> {
     await ActivityRepository().update(activity);
   }
 
-  Widget _buildEditForm(BuildContext context) {
-    return Consumer<AppModel>(builder: (context, appModel, child) {
-      if (!activity.participators.any((p) => p.userId == appModel.me.id)) {
-        activity.participators.insert(
-            0,
-            ActivityParticipation.fromUser(appModel.me.id,
-                activityId: activity.id));
-        _log.info("Add me ${appModel.me.name} to activity ${activity.name}");
-      }
-      return Container(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          child: ListView(
-            children: <Widget>[
-              //name
-              new TextFormField(
-                initialValue: activity.name,
-                decoration: new InputDecoration(
-                  labelText: S.of(context).activityName,
-                ),
-                onSaved: (val) {
-                  activity.name = val;
-                },
+  Widget _buildEditForm() {
+    if (!activity.participators.any((p) => p.userId == _appModel.me.id)) {
+      activity.participators.insert(
+          0,
+          ActivityParticipation.fromUser(_appModel.me.id,
+              activityId: activity.id));
+      _log.info("Add me ${_appModel.me.name} to activity ${activity.name}");
+    }
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        child: ListView(
+          children: <Widget>[
+            //name
+            new TextFormField(
+              initialValue: activity.name,
+              decoration: new InputDecoration(
+                labelText: S.of(context).activityName,
               ),
-              //TODO participator
-              FutureBuilder<List<ColorSwatch>>(
-                  future: getAvailableColors(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<ColorSwatch>> snapshot) {
-                    if (snapshot.data == null) {
-                      return Shimmer.fromColors(
-                          child: Container(
-                            height: 300,
-                          ),
-                          baseColor: Colors.grey[400],
-                          highlightColor: Colors.white);
-                    } else {
-                      return Container(
-                        padding: EdgeInsets.all(8),
-                        height: 300,
-                        child: BlockPicker(
-                           pickerColor: Color(activity.color),
-                           onColorChanged: (Color color) {
-                             // Handle color changes
-                             activity.color = color.value;
-                             //form change
-                             _editSave();
-                             //theme change
-                             setState(() {});
-                           },
-                          availableColors: snapshot.data,
-                         ),
-                      );
-                    }
-                  })
-            ],
-          ),
-          onChanged: () async {
-            if (_isAdd) {
-              return;
-            }
-            await _editSave();
-          },
+              onSaved: (val) {
+                activity.name = val;
+              },
+            ),
+            //TODO participator
+            Container(
+              padding: EdgeInsets.all(8),
+              height: 300,
+              child: BlockPicker(
+                pickerColor: Color(activity.color),
+                onColorChanged: (Color color) {
+                  // Handle color changes
+                  activity.color = color.value;
+                  //form change
+                  _editSave();
+                  //theme change
+                  setState(() {});
+                },
+                availableColors: _appModel.availableColors,
+              ),
+            )
+          ],
         ),
-      );
-    });
+        onChanged: () async {
+          if (_isAdd) {
+            return;
+          }
+          await _editSave();
+        },
+      ),
+    );
   }
 
   @override
@@ -141,6 +127,7 @@ class _ActivityEditState extends State<ActivityEdit> {
     var theme = activity == null
         ? Theme.of(context)
         : Theme.of(context).copyWith(primaryColor: Color(activity.color));
+    _appModel = Provider.of<AppModel>(context);
     return Theme(
       data: theme,
       child: Scaffold(
@@ -168,7 +155,7 @@ class _ActivityEditState extends State<ActivityEdit> {
                         },
                       )),
         ),
-        body: activity != null ? _buildEditForm(context) : Container(),
+        body: activity != null ? _buildEditForm() : Container(),
         bottomNavigationBar: _isAdd ? _buildAddButton(theme) : null,
       ),
     );
@@ -183,30 +170,11 @@ class _ActivityEditState extends State<ActivityEdit> {
         child: Consumer<ActivityStatModel>(
             builder: (context, model, child) => RaisedButton(
                   color: themeData.primaryColor,
-                  child: Text(S.of(context).createActivity,style: themeData.textTheme.button,),
+                  child: Text(
+                    S.of(context).createActivity,
+                    style: themeData.textTheme.button,
+                  ),
                   onPressed: () async => _addSave(model),
                 )));
-  }
-
-  ///available colors
-  Future<List<ColorSwatch>> getAvailableColors() async {
-    if (availableColors == null) {
-      var colors =
-          await DefaultAssetBundle.of(context).loadString("assets/colors.json");
-      List<dynamic> colorObject = json.decode(colors) as List<dynamic>;
-      availableColors = colorObject.map((p) {
-        var hex = p['hex'] as String;
-        Color primaryColor = HexColor.fromHex(hex);
-        var colorsArray = p['colors'] as List<dynamic>;
-        var index = 0;
-        var secondaryColors = Map.fromEntries(colorsArray.map((p) {
-          var key = index == 0 ? 50 : index * 100;
-          index++;
-          return MapEntry(key, HexColor.fromHex(p['hex'] as String));
-        }));
-        return MaterialColor(primaryColor.value, secondaryColors);
-      }).toList();
-    }
-    return availableColors;
   }
 }

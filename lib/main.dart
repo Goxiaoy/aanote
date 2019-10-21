@@ -32,6 +32,8 @@ void main() async {
   //init
   await SharedPreferences.getInstance();
   await appModel.loadHasMe();
+  //await appModel.getAvailableColors();
+  appModel.availableColors=Colors.primaries;
   runApp(new MyApp());
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent));

@@ -4,6 +4,7 @@ import 'package:aanote/app_route.dart';
 import 'package:aanote/model/activity.dart';
 import 'package:aanote/repositpory/activity_repository.dart';
 import 'package:aanote/view_model/activity_stat_model.dart';
+import 'package:aanote/view_model/app_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -27,8 +28,8 @@ class _ActivityListPageState extends State<ActivityListPage> {
   static const int _perPageCount = 20;
   ActivityStatModel activityStatModel;
 
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: true,initialLoadStatus: LoadStatus.loading);
+  RefreshController _refreshController = RefreshController(
+      initialRefresh: true, initialLoadStatus: LoadStatus.loading);
 
   @override
   void initState() {
@@ -128,37 +129,68 @@ class _ActivityListPageState extends State<ActivityListPage> {
   }
 
   Widget _buildActivityCard(Activity activity) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: 100,
-        child: activity != null
-            ? Card(
-                elevation: 10,
-                color: Color(activity.color),
-                child: InkWell(
-                  onTap: () => onTap(context, activity),
-                  child: Text(activity.name),
-                ),
-              )
-            : Card(
-                elevation: 10,
-                color: Theme.of(context).primaryColor,
-                child: InkWell(
-                  onTap: () {
+    return Padding(
+        padding: EdgeInsets.only(bottom: 8),
+        child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 120,
+            child: activity != null
+                ? _buildBaseCard(
+                    Color(activity.color),
+                    () => onTap(context, activity),
+                    Column(
+                      children: <Widget>[
+                        ListTile(
+                          title: Text(activity.name),
+                          subtitle: Text(activity.desc ?? ""),
+                        )
+                      ],
+                    ))
+                : _buildBaseCard(Theme.of(context).primaryColor, () {
                     //go to add
                     Navigator.of(context)
                         .pushNamed(AppRoute.activityEdit, arguments: null);
                   },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(Icons.add_circle),
-                      Text(S.of(context).noActiveActivity)
-                    ],
-                  ),
-                ),
-              ));
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.add_circle),
+                        Text(S.of(context).noActiveActivity)
+                      ],
+                    ))));
+  }
+
+  Widget _buildBaseCard(Color color, VoidCallback onTap, Widget child) {
+    return Card(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(14.0))),
+      elevation: 10,
+//      color: color,
+      child: InkWell(
+          onTap: onTap,
+          child: Consumer<AppModel>(
+            builder: (context, appModel, c) {
+              var primaryColors = appModel.availableColors
+                  .where((p) => p.value == color.value)
+                  .toList();
+              MaterialColor primaryColor;
+              if (primaryColors.length > 0) {
+                primaryColor = primaryColors.first;
+              } else {
+                assert(false);
+              }
+              return Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.centerRight,
+                        end: Alignment.centerLeft,
+                        colors: [primaryColor[100], primaryColor[50]])),
+                child: child,
+              );
+            },
+          )),
+    );
   }
 
   void onTap(BuildContext context, Activity activity) async {
