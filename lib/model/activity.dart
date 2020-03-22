@@ -45,24 +45,7 @@ class Activity {
   @JsonKey(ignore: true)
   List<ActivityParticipation> participators = new List<ActivityParticipation>();
 
-  ///update favorite status
-  setFavorite({bool value = true}) {
-    if (isFavorite == value) {
-      return;
-    }
-    isFavorite = value;
-    if (isFavorite) {
-      favoriteTime = DateTime.now();
-    } else {
-      favoriteTime = null;
-    }
-  }
 
-  ///archive activity
-  archive() {
-    status = ActivityStatus.Archived;
-    endTime = endTime ?? DateTime.now();
-  }
 
   factory Activity.fromJson(Map<String, dynamic> json) =>
       _$ActivityFromJson(json);

@@ -1,5 +1,5 @@
 import 'package:aanote/generated/i18n.dart';
-import 'package:aanote/model/user.dart';
+import 'package:aanote/entity/user.dart';
 import 'package:aanote/repositpory/user_repository.dart';
 import 'package:aanote/view_model/app_model.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';

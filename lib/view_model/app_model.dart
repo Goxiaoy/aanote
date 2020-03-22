@@ -1,7 +1,7 @@
 import 'package:aanote/repositpory/user_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:aanote/model/user.dart';
+import 'package:aanote/entity/user.dart';
 import 'dart:convert';
 import 'package:aanote/utils/color_extension.dart';
 import 'package:flutter/services.dart' show rootBundle;

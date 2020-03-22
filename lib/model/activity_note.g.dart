@@ -15,9 +15,7 @@ ActivityNote _$ActivityNoteFromJson(Map<String, dynamic> json) {
     activityId: json['activityId'] as String,
   )
     ..totalCost = (json['totalCost'] as num)?.toDouble()
-    ..category = json['category'] == null
-        ? null
-        : Category.fromJson(json['category'] as Map<String, dynamic>);
+    ..category = json['category'];
 }
 
 Map<String, dynamic> _$ActivityNoteToJson(ActivityNote instance) =>

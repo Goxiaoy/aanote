@@ -143,10 +143,18 @@ class _ActivityListPageState extends State<ActivityListPage> {
                         ListTile(
                           title: Text(activity.name),
                           subtitle: Text(activity.desc ?? ""),
+                        ),
+                        ListTile(
+                          trailing: Container(
+                              height: 50,
+                              width: 50,
+                            decoration: BoxDecoration(
+                                image:  DecorationImage(image: AssetImage('assets/images/activity.png')))
+                          ),
                         )
                       ],
                     ))
-                : _buildBaseCard(Theme.of(context).primaryColor, () {
+                : _buildBaseCard(Colors.white, () {
                     //go to add
                     Navigator.of(context)
                         .pushNamed(AppRoute.activityEdit, arguments: null);

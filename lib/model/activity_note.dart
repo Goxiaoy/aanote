@@ -1,6 +1,6 @@
 import 'package:aanote/model/activity_note_item.dart';
 import 'package:aanote/model/activity_participation.dart';
-import 'package:aanote/model/category.dart';
+import 'package:aanote/entity/category.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';

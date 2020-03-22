@@ -10,7 +10,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'generated/i18n.dart';
 import 'package:aanote/utils/environment.dart';
-import 'package:sqflite/sqflite.dart';
 import 'app_route.dart';
 import 'package:logging/logging.dart';
 import 'package:flutter/services.dart';
@@ -18,9 +17,8 @@ import 'package:flutter/services.dart';
 AppModel appModel = AppModel();
 
 void main() async {
-  if (!inProduction) {
-    Sqflite.devSetDebugModeOn(true);
-  }
+  WidgetsFlutterBinding.ensureInitialized();
+
   Logger.root.level = Level.FINE;
   Logger.root.onRecord.listen((LogRecord rec) {
     if (!inProduction) {

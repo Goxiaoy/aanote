@@ -1,5 +1,5 @@
 import 'package:aanote/model/activity.dart';
-import 'package:aanote/model/user.dart';
+import 'package:aanote/entity/user.dart';
 
 class ActivityPerDayStatistics{
 
